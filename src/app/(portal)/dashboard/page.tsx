@@ -1,4 +1,5 @@
-"use client";
+﻿export const runtime = "edge";
+("use client");
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
 import {
@@ -719,7 +720,7 @@ export default function DashboardPage() {
                         </div>
                         {ann.pinned && (
                           <div className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-amber-100 text-[8px] dark:bg-amber-900/50">
-                            📌
+                            ðŸ“Œ
                           </div>
                         )}
                       </div>
@@ -829,7 +830,7 @@ export default function DashboardPage() {
         </CardContent>
       </Card>
 
-      {/* Announcement Reading Overlay — Professional Clean */}
+      {/* Announcement Reading Overlay â€” Professional Clean */}
       <Dialog open={!!selectedAnn} onOpenChange={(open) => !open && setSelectedAnn(null)}>
         <DialogContent className="w-[95vw] sm:max-w-3xl gap-0 p-0 overflow-hidden outline-none border border-border/40 shadow-2xl rounded-3xl bg-background/95 backdrop-blur-xl [&>button]:hidden">
           {selectedAnn &&
@@ -1054,7 +1055,7 @@ function AttachmentsList({ announcementId }: { announcementId: string }) {
                 {file.file_name}
               </span>
               <span className="text-[10px] text-muted-foreground font-semibold mt-1">
-                {(file.file_size / 1024).toFixed(1)} KB •{" "}
+                {(file.file_size / 1024).toFixed(1)} KB â€¢{" "}
                 {file.file_type.split("/").pop()?.toUpperCase()}
               </span>
             </div>

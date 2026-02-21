@@ -1,4 +1,5 @@
-"use client";
+﻿export const runtime = "edge";
+("use client");
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useMemo } from "react";

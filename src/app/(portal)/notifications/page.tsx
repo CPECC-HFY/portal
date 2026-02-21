@@ -1,4 +1,5 @@
-"use client";
+﻿export const runtime = "edge";
+("use client");
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, react-hooks/set-state-in-effect */
 
 import { useState, useRef, useEffect } from "react";

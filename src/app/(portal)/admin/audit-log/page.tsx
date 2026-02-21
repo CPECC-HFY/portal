@@ -1,4 +1,5 @@
-"use client";
+﻿export const runtime = "edge";
+("use client");
 /* eslint-disable @typescript-eslint/no-unused-vars, react-hooks/incompatible-library */
 
 import { useState, useMemo } from "react";
@@ -247,7 +248,7 @@ export default function AuditLogPage() {
           if (!ip || ip === "N/A")
             return (
               <span className="text-muted-foreground flex items-center justify-center opacity-30">
-                —
+                â€”
               </span>
             );
 

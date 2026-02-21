@@ -1,3 +1,4 @@
+﻿export const runtime = "edge";
 import { Suspense } from "react";
 import AnnouncementsClient from "./announcements-client";
 import { Skeleton } from "@/components/ui/skeleton";

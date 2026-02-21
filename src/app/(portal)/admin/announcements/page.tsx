@@ -1,4 +1,5 @@
-"use client";
+﻿export const runtime = "edge";
+("use client");
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, react-hooks/incompatible-library */
 
 import { useState, useMemo } from "react";
@@ -312,7 +313,7 @@ export default function ManageAnnouncementsPage() {
     setDialogOpen(false);
   };
 
-  // ── Edit handler ──
+  // â”€â”€ Edit handler â”€â”€
   const handleEditOpen = async (ann: any) => {
     setEditAnn(ann);
     setEditTitle(ann.title || "");
@@ -389,7 +390,7 @@ export default function ManageAnnouncementsPage() {
     setEditSaving(false);
   };
 
-  // ── Archive handler ──
+  // â”€â”€ Archive handler â”€â”€
   const handleArchive = async (ann: any) => {
     const { error } = await supabase.rpc("archive_announcement", { p_announcement_id: ann.id });
     if (!error) {
@@ -399,7 +400,7 @@ export default function ManageAnnouncementsPage() {
     }
   };
 
-  // ── Delete handler ──
+  // â”€â”€ Delete handler â”€â”€
   const handleDelete = async (ann: any) => {
     const confirmed = window.confirm(
       `Are you sure you want to delete "${ann.title}"? This action cannot be undone.`
@@ -932,7 +933,7 @@ export default function ManageAnnouncementsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── Edit Announcement Dialog ── */}
+      {/* â”€â”€ Edit Announcement Dialog â”€â”€ */}
       <Dialog
         open={editDialogOpen}
         onOpenChange={(open) => {
@@ -1054,7 +1055,7 @@ export default function ManageAnnouncementsPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ── Preview Announcement Dialog ── */}
+      {/* â”€â”€ Preview Announcement Dialog â”€â”€ */}
       <Dialog open={!!previewAnn} onOpenChange={(open) => !open && setPreviewAnn(null)}>
         <DialogContent className="max-w-2xl gap-0 p-0 overflow-hidden outline-none border-none shadow-2xl rounded-2xl">
           {previewAnn &&
@@ -1097,7 +1098,7 @@ export default function ManageAnnouncementsPage() {
                       </span>
                       {previewAnn.pinned && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                          📌 Pinned
+                          ðŸ“Œ Pinned
                         </span>
                       )}
                       <span className="ml-auto inline-flex items-center gap-2 text-[11px] text-muted-foreground font-bold uppercase tracking-widest">
