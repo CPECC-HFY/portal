@@ -1,0 +1,327 @@
+﻿
+> oppp@0.1.0 lint
+> eslint
+
+
+D:\oppp\check_users.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\check_users_simple.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\debug_audit.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\dump_logs.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\fix_js_scripts.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\fix_lints.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\public\fallback-ce627215c0e4a9af.js
+  1:247   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:313   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:462   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:499   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:560   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:694   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:708   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:724   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:873   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:908   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:956   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:994   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1126  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1461  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1493  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1590  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1765  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1798  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1830  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2109  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2142  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2174  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2287  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+D:\oppp\public\sw.js
+  1:156  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:209  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:626  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+D:\oppp\public\workbox-f1770938.js
+  1:49     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:87     warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:211    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:257    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:298    warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:381    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:642    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:813    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:989    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1093   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1738   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2263   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3058   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3102   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:3598   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3727   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7052   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7234   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7954   warning  'i' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:7962   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8066   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8368   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9440   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9550   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9566   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9627   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9962   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10038  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10065  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10081  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10163  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10963  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11007  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:11122  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11194  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11301  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11382  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11623  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11941  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12060  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12464  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12684  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13012  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13272  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13319  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13367  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:14423  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:14555  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14599  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:15097  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15191  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15404  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15514  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16025  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16057  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:16165  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16591  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16958  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17076  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17178  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17458  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17719  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17903  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19089  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20040  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20129  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20260  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20317  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20514  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20635  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20768  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20988  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:21080  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21657  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21768  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21988  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22227  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:22385  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:22450  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22748  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22962  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:23349  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:23479  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+D:\oppp\src\app\(portal)\admin\analytics\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\admin\announcements\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\admin\audit-log\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\admin\groups\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\admin\users\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\announcements\announcements-client.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\dashboard\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\(portal)\notifications\page.tsx
+    2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+    2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+    2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+    2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+  209:9  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+D:\oppp\src\app\(portal)\profile\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\actions\audit-actions.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\actions\notification-actions.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\actions\user-actions.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\app\login\page.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\announcements\announcement-comments.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\announcements\category-manager.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\layout\app-sidebar.tsx
+   2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+   2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+   2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+   2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+   2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+  58:9  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+D:\oppp\src\components\layout\header-auth.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\layout\header.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\ui\file-uploader.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+
+D:\oppp\src\components\ui\icon-picker.tsx
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\components\ui\rich-text-editor.tsx
+    2:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+    2:1   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+    2:1   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+    2:1   warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+    2:1   warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+  182:13  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+
+D:\oppp\src\hooks\use-announcement-categories.ts
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  2:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\hooks\use-supabase.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\src\middleware.ts
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-explicit-any')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/preserve-manual-memoization')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/incompatible-library')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from 'react-hooks/exhaustive-deps')
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/ban-ts-comment')
+
+D:\oppp\test_log_insert.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\test_policies.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+D:\oppp\test_user.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported from '@typescript-eslint/no-unused-vars')
+
+Γ£û 247 problems (4 errors, 243 warnings)
+  0 errors and 134 warnings potentially fixable with the `--fix` option.
+

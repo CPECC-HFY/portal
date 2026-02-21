@@ -1,0 +1,83 @@
+# Employee Portal — Walkthrough
+
+## What Was Built
+
+A modern employee portal with **all 15 requested technologies** integrated and verified:
+
+| # | Technology | Integration | Key File(s) |
+|---|-----------|-------------|-------------|
+| 1 | ✅ **Next.js 16** | Framework, Turbopack, App Router | [next.config.ts](file:///d:/oppp/next.config.ts) |
+| 2 | ✅ **TypeScript** | All source files | [tsconfig.json](file:///d:/oppp/tsconfig.json) |
+| 3 | ✅ **Clerk** | `ClerkProvider` (conditional), middleware | [layout.tsx](file:///d:/oppp/src/app/layout.tsx), [middleware.ts](file:///d:/oppp/src/middleware.ts) |
+| 4 | ✅ **Sentry** | Client/server/edge configs, conditional wrapper | `sentry.*.config.ts`, [next.config.ts](file:///d:/oppp/next.config.ts) |
+| 5 | ✅ **Tailwind CSS v4** | CSS-first `@theme` with oklch colors | [globals.css](file:///d:/oppp/src/app/globals.css) |
+| 6 | ✅ **shadcn-ui** | 15 Radix UI components | `src/components/ui/` |
+| 7 | ✅ **Zod** | 4 validation schemas | `src/lib/schemas.ts` |
+| 8 | ✅ **Zustand** | 2 stores (notifications, sidebar) | `src/store/` |
+| 9 | ✅ **Nuqs** | URL search params on Announcements | `announcements-client.tsx` |
+| 10 | ✅ **TanStack Tables** | 3 admin data tables | `admin/users`, `admin/announcements`, `admin/audit-log` |
+| 11 | ✅ **React Hook Form** | Profile + Manage Users forms | `profile/page.tsx`, `admin/users/page.tsx` |
+| 12 | ✅ **kbar** | ⌘K command palette | `kbar-provider.tsx` |
+| 13 | ✅ **ESLint** | Configured in `eslint-config-next` | `eslint.config.mjs` |
+| 14 | ✅ **Husky** | Pre-commit hook → lint-staged | `.husky/pre-commit` |
+| 15 | ✅ **Prettier** | Code formatting with lint-staged | `.prettierrc` |
+
+> [!NOTE]
+> **Clerk** and **Sentry** use conditional wrappers — they activate automatically when you add your API keys to `.env.local`. Copy `.env.example` to get started.
+
+---
+
+## Pages (9 total)
+
+| Page | Route | Features |
+|------|-------|----------|
+| Dashboard | `/dashboard` | Stat cards, announcements, activity timeline |
+| Announcements | `/announcements` | Search + Nuqs URL filters |
+| Notifications | `/notifications` | Tabs, mark-read (Zustand) |
+| Profile | `/profile` | React Hook Form + Zod validation |
+| Settings | `/settings` | Theme picker, notification toggles |
+| Analytics | `/analytics` | Recharts area/bar charts, table |
+| Manage Users | `/admin/users` | TanStack table, RHF+Zod dialog |
+| Manage Announcements | `/admin/announcements` | TanStack table, CRUD |
+| Audit Log | `/admin/audit-log` | Action filters, IP display |
+
+---
+
+## Build Verification ✅
+
+```
+▲ Next.js 16.1.6 (Turbopack)
+✓ Compiled successfully in 4.5s
+✓ Finished TypeScript in 6.0s
+✓ Generating static pages (4/4)
+
+○ /              (Static)
+ƒ /dashboard     (Dynamic — auth-protected)
+ƒ /analytics     (Dynamic)
+ƒ Proxy (Middleware)
+```
+
+## Browser Screenshots
+
+````carousel
+![Dashboard — Light Mode](C:\Users\Murtadha.H\.gemini\antigravity\brain\6f0bb5e0-7cd0-4e17-a070-e49c983760de\dashboard_overview_1771546404508.png)
+<!-- slide -->
+![Manage Users — Dark Mode](C:\Users\Murtadha.H\.gemini\antigravity\brain\6f0bb5e0-7cd0-4e17-a070-e49c983760de\manage_users_dark_mode_final_1771546572615.png)
+<!-- slide -->
+![Audit Log — Dark Mode](C:\Users\Murtadha.H\.gemini\antigravity\brain\6f0bb5e0-7cd0-4e17-a070-e49c983760de\analytics_dark_mode_1771546523468.png)
+````
+
+## Getting Started
+
+```bash
+# 1. Copy env template and add your API keys
+cp .env.example .env.local
+
+# 2. Start dev server
+npm run dev
+
+# 3. Available scripts
+npm run format        # Format all files with Prettier
+npm run lint          # ESLint check
+npm run format:check  # Verify formatting
+```

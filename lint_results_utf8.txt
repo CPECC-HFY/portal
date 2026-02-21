@@ -1,0 +1,649 @@
+﻿
+> oppp@0.1.0 lint
+> eslint
+
+
+D:\oppp\check_users.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\check_users_simple.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\debug_audit.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\dump_logs.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\public\fallback-ce627215c0e4a9af.js
+  1:247   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:313   warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:462   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:499   warning  'r' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:560   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:694   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:708   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:724   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:873   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:908   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:956   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:994   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1126  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1461  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1493  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1590  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:1765  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1798  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1830  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2109  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2142  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2174  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2287  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+D:\oppp\public\sw.js
+  1:156  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:209  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:626  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+D:\oppp\public\workbox-f1770938.js
+  1:49     warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:87     warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:211    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:257    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:298    warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:381    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:642    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:813    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:989    warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1093   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:1738   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:2263   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3058   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3102   warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:3598   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:3727   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7052   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7234   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:7954   warning  'i' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:7962   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8066   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:8368   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9440   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9550   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9566   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9627   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:9962   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10038  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10065  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10081  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10163  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:10963  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11007  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:11122  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11194  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11301  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11382  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11623  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:11941  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12060  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12464  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:12684  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13012  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13272  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13319  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:13367  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:14423  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:14555  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:14599  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:15097  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15191  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15404  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:15514  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16025  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16057  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:16165  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16591  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:16958  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17076  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17178  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17458  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17719  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:17903  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:19089  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20040  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20129  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20260  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20317  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20514  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20635  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20768  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:20988  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:21080  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21657  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21768  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:21988  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22227  warning  'e' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:22385  warning  's' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:22450  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22748  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:22962  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  1:23349  warning  't' is defined but never used                                          @typescript-eslint/no-unused-vars
+  1:23479  warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+D:\oppp\src\app\(portal)\admin\analytics\page.tsx
+   4:5   warning  'BarChart3' is defined but never used               @typescript-eslint/no-unused-vars
+  10:5   warning  'ArrowUpRight' is defined but never used            @typescript-eslint/no-unused-vars
+  11:5   warning  'ArrowDownRight' is defined but never used          @typescript-eslint/no-unused-vars
+  24:10  warning  'Badge' is defined but never used                   @typescript-eslint/no-unused-vars
+  29:5   warning  'LineChart' is defined but never used               @typescript-eslint/no-unused-vars
+  30:5   warning  'Line' is defined but never used                    @typescript-eslint/no-unused-vars
+  50:7   warning  'miniChartData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  76:7   warning  'miniChartKeys' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\src\app\(portal)\admin\announcements\page.tsx
+   26:5   warning  'Users' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   27:5   warning  'Monitor' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+   28:5   warning  'Landmark' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   29:5   warning  'ShieldAlert' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   30:5   warning  'CalendarDays' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   69:5   warning  'DialogFooter' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   72:10  warning  'RoleBadge' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+   76:15  warning  'Announcement' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   91:10  warning  'cn' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   97:23  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  138:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  153:34  warning  'categoriesLoading' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  172:44  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  183:50  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  189:11  warning  'handleContentChange' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  204:11  warning  'handleMentionSelect' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  213:11  warning  'filteredUsers' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  214:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  224:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  225:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  226:31  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  280:67  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  309:40  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  318:65  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  341:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  342:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  355:28  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  358:63  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  377:39  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  387:38  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  521:19  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+D:\oppp\src\app\(portal)\admin\announcements\page.tsx:521:19
+  519 |     );
+  520 |
+> 521 |     const table = useReactTable({
+      |                   ^^^^^^^^^^^^^ TanStack Table's `useReactTable()` API returns functions that cannot be memoized safely
+  522 |         data,
+  523 |         columns,
+  524 |         state: { sorting, globalFilter },  react-hooks/incompatible-library
+
+D:\oppp\src\app\(portal)\admin\audit-log\page.tsx
+  171:30  warning  'e' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  220:19  warning  Compilation Skipped: Use of incompatible library
+
+This API returns functions which cannot be memoized without leading to stale UI. To prevent this, by default React Compiler will skip memoizing this component/hook. However, you may see issues if values from this API are passed to other components/hooks that are memoized.
+
+D:\oppp\src\app\(portal)\admin\audit-log\page.tsx:220:19
+  218 |     );
+  219 |
+> 220 |     const table = useReactTable({
+      |                   ^^^^^^^^^^^^^ TanStack Table's `useReactTable()` API returns functions that cannot be memoized safely
+  221 |         data: filtered,
+  222 |         columns,
+  223 |         state: { sorting, globalFilter },  react-hooks/incompatible-library
+
+D:\oppp\src\app\(portal)\admin\groups\page.tsx
+  10:5   warning  'X' is defined but never used             @typescript-eslint/no-unused-vars
+  46:56  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  77:39  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  79:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\(portal)\admin\users\page.tsx
+   88:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  149:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  188:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  190:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  204:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\(portal)\announcements\announcements-client.tsx
+    3:123  warning  'Share2' is defined but never used               @typescript-eslint/no-unused-vars
+    3:131  warning  'Bookmark' is defined but never used             @typescript-eslint/no-unused-vars
+   14:5    warning  'DialogDescription' is defined but never used    @typescript-eslint/no-unused-vars
+   21:10   warning  'cn' is defined but never used                   @typescript-eslint/no-unused-vars
+   23:31   warning  'ExternalLink' is defined but never used         @typescript-eslint/no-unused-vars
+   70:23   error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+   77:27   error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+   91:34   warning  'loading' is assigned a value but never used     @typescript-eslint/no-unused-vars
+   92:52   error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+   94:39   error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  407:41   error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  463:10   warning  'FileTextPlaceholder' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\src\app\(portal)\dashboard\page.tsx
+   18:5   warning  'Monitor' is defined but never used            @typescript-eslint/no-unused-vars
+   19:5   warning  'Landmark' is defined but never used           @typescript-eslint/no-unused-vars
+   20:5   warning  'ShieldAlert' is defined but never used        @typescript-eslint/no-unused-vars
+   23:5   warning  'Share2' is defined but never used             @typescript-eslint/no-unused-vars
+   24:5   warning  'Bookmark' is defined but never used           @typescript-eslint/no-unused-vars
+   38:5   warning  'CardFooter' is defined but never used         @typescript-eslint/no-unused-vars
+   58:5   warning  'DialogDescription' is defined but never used  @typescript-eslint/no-unused-vars
+  107:34  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  111:23  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  118:27  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  159:52  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  168:39  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  605:66  warning  'e' is defined but never used                  @typescript-eslint/no-unused-vars
+  962:41  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\(portal)\notifications\page.tsx
+   14:29  warning  'CardHeader' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   14:41  warning  'CardTitle' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   19:10  warning  'supabase' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   21:8   warning  'Link' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   49:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  141:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/no-explicit-any
+  208:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\app\(portal)\notifications\page.tsx:208:9
+  206 |
+  207 |     useEffect(() => {
+> 208 |         setIsMounted(true);
+      |         ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  209 |     }, []);
+  210 |
+  211 |     const filtered =  react-hooks/set-state-in-effect
+
+D:\oppp\src\app\(portal)\profile\page.tsx
+  222:54  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  291:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\actions\audit-actions.ts
+  56:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\actions\notification-actions.ts
+    4:10  warning  'revalidatePath' is defined but never used  @typescript-eslint/no-unused-vars
+   51:19  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+   88:19  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+  126:19  error    Unexpected any. Specify a different type    @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\actions\user-actions.ts
+    6:19  warning  'headers' is defined but never used              @typescript-eslint/no-unused-vars
+  134:19  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  162:40  warning  'fetchError' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  192:19  error    Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+D:\oppp\src\app\login\page.tsx
+  8:8  warning  'Link' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\src\components\announcements\announcement-comments.tsx
+   9:10  warning  'Badge' is defined but never used      @typescript-eslint/no-unused-vars
+  11:10  warning  'Separator' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\src\components\announcements\category-manager.tsx
+  4:10  warning  'Plus' is defined but never used   @typescript-eslint/no-unused-vars
+  4:16  warning  'Check' is defined but never used  @typescript-eslint/no-unused-vars
+  4:32  warning  'X' is defined but never used      @typescript-eslint/no-unused-vars
+
+D:\oppp\src\components\layout\app-sidebar.tsx
+  11:5   warning  'User' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  54:19  warning  'notifications' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  57:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\components\layout\app-sidebar.tsx:57:9
+  55 |
+  56 |     useEffect(() => {
+> 57 |         setIsMounted(true);
+     |         ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  58 |     }, []);
+  59 |
+  60 |     const { profile } = useUserProfile(user?.id);  react-hooks/set-state-in-effect
+
+D:\oppp\src\components\layout\header-auth.tsx
+  32:11  warning  'userInitials' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\src\components\layout\header.tsx
+  43:13  warning  'isOpen' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  44:11  warning  'title' is assigned a value but never used   @typescript-eslint/no-unused-vars
+
+D:\oppp\src\components\ui\file-uploader.tsx
+   12:5   warning  'CheckCircle2' is defined but never used                                                                             @typescript-eslint/no-unused-vars
+   83:25  error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+   84:59  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  100:27  error    Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+
+D:\oppp\src\components\ui\icon-picker.tsx
+  47:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\oppp\src\components\ui\rich-text-editor.tsx
+  148:13  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `props`, but the source dependencies were [props.items, props.command]. Inferred less specific property than source.
+
+D:\oppp\src\components\ui\rich-text-editor.tsx:148:13
+  146 |
+  147 |         const selectItem = useCallback(
+> 148 |             (index: number) => {
+      |             ^^^^^^^^^^^^^^^^^^^^
+> 149 |                 const item = props.items[index];
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 150 |                 if (item) props.command(item);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 151 |             },
+      | ^^^^^^^^^^^^^^ Could not preserve existing manual memoization
+  152 |             [props.items, props.command]
+  153 |         );
+  154 |  react-hooks/preserve-manual-memoization
+  152:13  warning  React Hook useCallback has a missing dependency: 'props'. Either include it or remove the dependency array. However, 'props' will change when *any* prop changes, so the preferred fix is to destructure the 'props' object outside of the useCallback call and refer to those specific props inside useCallback                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/exhaustive-deps
+  179:25  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\components\ui\rich-text-editor.tsx:179:25
+  177 |         );
+  178 |
+> 179 |         useEffect(() => setSelectedIndex(0), [props.items]);
+      |                         ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  180 |
+  181 |         if (!props.items.length) {
+  182 |             return (                                                   react-hooks/set-state-in-effect
+  257:30  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+  278:31  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+  285:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-explicit-any
+
+D:\oppp\src\hooks\use-announcement-categories.ts
+  32:31  error  Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `mounted.current`, but the source dependencies were [mounted]. Differences in ref.current access.
+
+D:\oppp\src\hooks\use-announcement-categories.ts:32:31
+  30 |     const mounted = useMountedRef();
+  31 |
+> 32 |     const fetch = useCallback(async (isRefresh = false) => {
+     |                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         if (!mounted.current) return;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |         if (!isRefresh) setLoading(true);
+     ΓÇª
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 49 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 50 |     }, [mounted]);
+     | ^^^^^^ Could not preserve existing manual memoization
+  51 |
+  52 |     useEffect(() => {
+  53 |         fetch();  react-hooks/preserve-manual-memoization
+  37:57  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  53:9   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-announcement-categories.ts:53:9
+  51 |
+  52 |     useEffect(() => {
+> 53 |         fetch();
+     |         ^^^^^ Avoid calling setState() directly within an effect
+  54 |
+  55 |         const channel = (supabase as any)
+  56 |             .channel("announcement_categories_changes")                                                                                                                                 react-hooks/set-state-in-effect
+  55:38  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  70:57  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+
+D:\oppp\src\hooks\use-supabase.ts
+     8:5   warning  'DbNotification' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+    22:11  warning  'AsyncState' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+    95:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:95:13
+  93 |     useEffect(() => {
+  94 |         if (!userId) {
+> 95 |             setProfile(null);
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  96 |             setLoading(false);
+  97 |             return;
+  98 |         }                                                                                                                                                                                                                                                        react-hooks/set-state-in-effect
+   209:19  warning  'now' is assigned a value but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   298:45  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   322:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   355:67  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   356:41  warning  'day' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   357:33  warning  'day' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   358:41  warning  'day' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   359:36  warning  'day' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   364:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   372:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   380:51  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   457:9   error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `mounted.current`, but the source dependencies were [table, selectQuery, orderColumn, pageSize, mounted]. Differences in ref.current access.
+
+D:\oppp\src\hooks\use-supabase.ts:457:9
+  455 |
+  456 |     const fetchPage = useCallback(
+> 457 |         async (pageNum: number, append = false, isRefresh = false) => {
+      |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 458 |             if (!mounted.current) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 459 |             if (!isRefresh) setLoading(true);
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 480 |             setLoading(false);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 481 |         },
+      | ^^^^^^^^^^ Could not preserve existing manual memoization
+  482 |         [table, selectQuery, orderColumn, pageSize, mounted]
+  483 |     );
+  484 |  react-hooks/preserve-manual-memoization
+   497:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:497:9
+  495 |
+  496 |     useEffect(() => {
+> 497 |         fetchPage(0);
+      |         ^^^^^^^^^ Avoid calling setState() directly within an effect
+  498 |
+  499 |         if (!realtimeTable) return;
+  500 |                                                                                                                                                                                                                                                                                                              react-hooks/set-state-in-effect
+   576:9   error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `mounted.current`, but the source dependencies were [mounted, setNotifications]. Differences in ref.current access.
+
+D:\oppp\src\hooks\use-supabase.ts:576:9
+  574 |
+  575 |     const fetchNotifications = useCallback(
+> 576 |         async (uid: string, isRefresh = false) => {
+      |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 577 |             if (!mounted.current) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 578 |             if (!isRefresh) setLoading(true);
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 594 |             setLoading(false);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 595 |         },
+      | ^^^^^^^^^^ Could not preserve existing manual memoization
+  596 |         [mounted, setNotifications]
+  597 |     );
+  598 |                                                                                   react-hooks/preserve-manual-memoization
+   639:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:639:13
+  637 |         if (!userId) {
+  638 |             setNotifications([]);
+> 639 |             setLoading(false);
+      |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  640 |             return;
+  641 |         }
+  642 |                                                                                                                                                                                                                                                                  react-hooks/set-state-in-effect
+   677:8   warning  React Hook useEffect has a missing dependency: 'setNotifications'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/exhaustive-deps
+   695:56  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   696:62  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   714:27  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   792:31  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   854:21  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   872:42  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   892:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:892:9
+  890 |
+  891 |     useEffect(() => {
+> 892 |         fetchGroups();
+      |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  893 |     }, [fetchGroups]);
+  894 |
+  895 |     return { groups, loading, error, refresh: () => fetchGroups(true) };                                                                                                                                                                                                                                               react-hooks/set-state-in-effect
+   902:46  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+   912:39  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `mounted.current`, but the source dependencies were [mounted]. Differences in ref.current access.
+
+D:\oppp\src\hooks\use-supabase.ts:912:39
+  910 |     }, [comments]);
+  911 |
+> 912 |     const fetchComments = useCallback(async (aid: string, isRefresh = false) => {
+      |                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 913 |         if (!mounted.current) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 914 |         if (!isRefresh) setLoading(true);
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 927 |         setLoading(false);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 928 |     }, [mounted]);
+      | ^^^^^^ Could not preserve existing manual memoization
+  929 |
+  930 |     useEffect(() => {
+  931 |         if (!announcementId) {                                                                          react-hooks/preserve-manual-memoization
+   932:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:932:13
+  930 |     useEffect(() => {
+  931 |         if (!announcementId) {
+> 932 |             setComments([]);
+      |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  933 |             setLoading(false);
+  934 |             return;
+  935 |         }                                                                                                                                                                                                                                        react-hooks/set-state-in-effect
+   996:52  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+  1001:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `mounted.current`, but the source dependencies were [mounted]. Differences in ref.current access.
+
+D:\oppp\src\hooks\use-supabase.ts:1001:42
+   999 |     const mounted = useMountedRef();
+  1000 |
+> 1001 |     const fetchAttachments = useCallback(async (aid: string) => {
+       |                                          ^^^^^^^^^^^^^^^^^^^^^^^^
+> 1002 |         if (!mounted.current) return;
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 1003 |         setLoading(true);
+       ΓÇª
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 1012 |         setLoading(false);
+       | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 1013 |     }, [mounted]);
+       | ^^^^^^ Could not preserve existing manual memoization
+  1014 |
+  1015 |     useEffect(() => {
+  1016 |         if (!announcementId) {                                                                                        react-hooks/preserve-manual-memoization
+  1004:57  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-explicit-any
+  1017:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\oppp\src\hooks\use-supabase.ts:1017:13
+  1015 |     useEffect(() => {
+  1016 |         if (!announcementId) {
+> 1017 |             setAttachments([]);
+       |             ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  1018 |             setLoading(false);
+  1019 |             return;
+  1020 |         }                                                                                                                                                                                                                          react-hooks/set-state-in-effect
+
+D:\oppp\src\middleware.ts
+  20:58  warning  'options' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\oppp\supabase.ts
+  1:0  error  Parsing error: File appears to be binary
+
+D:\oppp\test_log_insert.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\test_policies.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+D:\oppp\test_user.js
+  1:1   error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+Γ£û 283 problems (105 errors, 178 warnings)
+
