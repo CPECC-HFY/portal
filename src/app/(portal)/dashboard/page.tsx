@@ -28,6 +28,7 @@ import {
   Download,
   FileText,
   Megaphone as MegaphoneIcon,
+  ExternalLink,
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import { cn, stripHtml } from "@/lib/utils";
@@ -51,7 +52,8 @@ import {
 } from "@/hooks/use-supabase";
 import { useAnnouncementCategories } from "@/hooks/use-announcement-categories";
 import Link from "next/link";
-import { useState } from "react";
+import { useKBar } from "kbar";
+import { useTranslations, useFormatter } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -60,6 +62,12 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RoleBadge } from "@/components/ui/role-badge";
@@ -114,35 +122,31 @@ const DynamicCategoryIcon = ({ icon, className }: { icon: string; className?: st
   return <Icon className={className} />;
 };
 
-function getDate(ann: any): string {
+function getDate(ann: any, format: any): string {
   const raw = ann.published_at || ann.publishedAt || ann.created_at;
   if (!raw) return "";
   const d = new Date(raw);
-  return isNaN(d.getTime())
-    ? ""
-    : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  if (isNaN(d.getTime())) return "";
+  return format.dateTime(d, { month: "short", day: "numeric", year: "numeric" });
 }
 
-function getDateLong(ann: any): string {
+function getDateLong(ann: any, format: any): string {
   const raw = ann.published_at || ann.publishedAt || ann.created_at;
   if (!raw) return "";
   const d = new Date(raw);
-  return isNaN(d.getTime())
-    ? ""
-    : d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  if (isNaN(d.getTime())) return "";
+  return format.dateTime(d, { month: "long", day: "numeric", year: "numeric" });
 }
 
+import { useState, useEffect, useMemo } from "react";
 import {
   BarChart,
   Bar,
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   ResponsiveContainer,
-  Legend,
   Area,
   AreaChart,
   PieChart,
@@ -157,6 +161,96 @@ const tooltipStyle = {
   color: "var(--foreground)",
   fontSize: "12px",
   boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+};
+
+const StatsCard = ({
+  title,
+  value,
+  icon: Icon,
+  description,
+  trend,
+  sparklineData,
+  color,
+  bgColor,
+  gradientFrom,
+  gradientTo,
+  loading,
+  index,
+}: {
+  title: string;
+  value: number | string;
+  icon: any;
+  description: string;
+  trend?: "up" | "down" | "neutral";
+  sparklineData?: any[];
+  color: string;
+  bgColor: string;
+  gradientFrom: string;
+  gradientTo: string;
+  loading?: boolean;
+  index: number;
+}) => {
+  return (
+    <Card className="relative overflow-hidden transition-shadow hover:shadow-md">
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${gradientFrom} ${gradientTo} opacity-50`}
+      />
+      <CardHeader className="relative flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+        <div className={`rounded-lg p-2 ${bgColor} ${color}`}>
+          <Icon className="size-4" />
+        </div>
+      </CardHeader>
+      <CardContent className="relative">
+        {loading ? (
+          <div className="h-10 w-24 animate-pulse rounded bg-muted/20" />
+        ) : (
+          <div className="flex items-end justify-between">
+            <div>
+              <div className="text-3xl font-bold tabular-nums">{value}</div>
+              <p
+                className={`mt-1 flex items-center gap-1 text-xs ${trend === "up"
+                  ? "text-emerald-500"
+                  : trend === "down"
+                    ? "text-amber-500"
+                    : "text-muted-foreground"
+                  }`}
+              >
+                {trend === "up" && <TrendingUp className="size-3" />}
+                {trend === "down" && <TrendingDown className="size-3" />}
+                {description}
+              </p>
+            </div>
+            {/* Mini sparkline */}
+            {sparklineData && (
+              <div className="h-10 w-24">
+                <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
+                  <AreaChart data={sparklineData}>
+                    <defs>
+                      <linearGradient id={`sparkGradHome-${index}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <Area
+                      type="monotone"
+                      dataKey="v"
+                      stroke="currentColor"
+                      fill={`url(#sparkGradHome-${index})`}
+                      strokeWidth={1.5}
+                      className={color.split(' ')[0]}
+                      dot={false}
+                      isAnimationActive={false}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
 };
 
 export default function DashboardPage() {
@@ -174,7 +268,19 @@ export default function DashboardPage() {
     weeklyActivity,
     sparklines,
     loading: dashboardLoading,
+    refetch,
   } = useDashboardData();
+
+  const t = useTranslations("Dashboard");
+  const commonT = useTranslations("Common");
+  const annT = useTranslations("Announcements");
+  const format = useFormatter();
+
+  const totalEmployees = useMemo(
+    () => departmentDistribution.reduce((acc, dept) => acc + dept.employees, 0),
+    [departmentDistribution]
+  );
+  const recentAnnouncements = announcements.slice(0, 5);
 
   const isEmployee = profile?.role === "Employee";
 
@@ -191,302 +297,157 @@ export default function DashboardPage() {
   if (dashboardLoading || profileLoading || authLoading) {
     return (
       <div className="p-8 text-center text-muted-foreground animate-pulse flex items-center justify-center h-full">
-        Loading live dashboard data...
+        {t("loadingDashboard")}
       </div>
     );
   }
 
-  const stats = [
-    {
-      title: "Total Announcements",
-      value: dashboardStats.totalAnnouncements || announcements.length,
-      change: `+${dashboardStats.announcementsThisWeek} this week`,
-      trend: "up" as const,
-      icon: Megaphone,
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
-      gradientFrom: "from-blue-500/20",
-      gradientTo: "to-blue-500/5",
-      adminOnly: false,
-      sparkData: sparklines.announcements,
-    },
-    {
-      title: "Active Users",
-      value: dashboardStats.activeUsers,
-      change: `${dashboardStats.recentLoginsToday} active today`,
-      trend: "up" as const,
-      icon: Users,
-      color: "text-emerald-500",
-      bgColor: "bg-emerald-500/10",
-      gradientFrom: "from-emerald-500/20",
-      gradientTo: "to-emerald-500/5",
-      adminOnly: true,
-      sparkData: sparklines.users,
-    },
-    {
-      title: "Unread Notifications",
-      value: unreadCount,
-      change: `${unreadCount} unread`,
-      trend: unreadCount > 0 ? ("up" as const) : ("down" as const),
-      icon: Bell,
-      color: "text-amber-500",
-      bgColor: "bg-amber-500/10",
-      gradientFrom: "from-amber-500/20",
-      gradientTo: "to-amber-500/5",
-      adminOnly: false,
-      sparkData: sparklines.notifications,
-    },
-    {
-      title: "Employee Engagement",
-      value: dashboardStats.departments,
-      change: `76.4% engagement`,
-      trend: "up" as const,
-      icon: Building2,
-      color: "text-purple-500",
-      bgColor: "bg-purple-500/10",
-      gradientFrom: "from-purple-500/20",
-      gradientTo: "to-purple-500/5",
-      adminOnly: true,
-      sparkData: sparklines.activity,
-    },
-  ].filter((s) => !isEmployee || !s.adminOnly);
-
-  const recentAnnouncements = announcements.filter((a) => a.status === "Published").slice(0, 4);
-
-  const totalEmployees = departmentDistribution.reduce((acc, d) => acc + d.employees, 0);
-
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+    <div className="space-y-6 animate-in fade-in duration-700">
+      {/* Welcome Section */}
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-            <Badge variant="secondary" className="gap-1 text-xs">
-              <Sparkles className="size-3" />
-              Live
-            </Badge>
-          </div>
-          <p className="text-muted-foreground">
-            Welcome back! Here&apos;s your portal overview for{" "}
-            <span className="font-medium text-foreground">February 2026</span>
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl text-foreground/90">
+            {t("welcome", { name: profile?.name || "User" })}
+          </h1>
+          <p className="text-muted-foreground mt-1">{t("dashboardSubHeader")}</p>
         </div>
-        {!isEmployee && (
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" asChild>
-              <Link href="/analytics">
-                <BarChart3 className="mr-2 size-4" />
-                Full Analytics
-              </Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/admin/announcements">
-                <Megaphone className="mr-2 size-4" />
-                New Announcement
-              </Link>
-            </Button>
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            disabled={dashboardLoading}
+          >
+            {commonT("refresh")}
+          </Button>
+          <Button size="sm" asChild>
+            <Link href="/announcements">{t("viewAllAnnouncements")}</Link>
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Grid with Sparklines */}
-      <div
-        className={cn(
-          "grid grid-cols-1 gap-4 sm:grid-cols-2",
-          isEmployee ? "lg:grid-cols-2" : "lg:grid-cols-4"
-        )}
-      >
-        {stats.map((stat, index) => (
-          <Card
-            key={stat.title}
-            className="relative overflow-hidden transition-shadow hover:shadow-md"
-          >
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} opacity-50`}
-            />
-            <CardHeader className="relative flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <div className={`rounded-lg p-2 ${stat.bgColor} ${stat.color}`}>
-                <stat.icon className="size-4" />
-              </div>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="flex items-end justify-between">
-                <div>
-                  <div className="text-3xl font-bold">{stat.value}</div>
-                  <p
-                    className={`mt-1 flex items-center gap-1 text-xs ${
-                      stat.trend === "up" ? "text-emerald-500" : "text-amber-500"
-                    }`}
-                  >
-                    {stat.trend === "up" ? (
-                      <TrendingUp className="size-3" />
-                    ) : (
-                      <TrendingDown className="size-3" />
-                    )}
-                    {stat.change}
-                  </p>
-                </div>
-                {/* Mini sparkline */}
-                <div className="h-10 w-20">
-                  <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-                    <AreaChart data={stat.sparkData}>
-                      <defs>
-                        <linearGradient id={`sparkGrad-${index}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="currentColor" stopOpacity={0.3} />
-                          <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <Area
-                        type="monotone"
-                        dataKey="v"
-                        stroke="currentColor"
-                        fill={`url(#sparkGrad-${index})`}
-                        strokeWidth={1.5}
-                        className={stat.color}
-                        dot={false}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatsCard
+          title={t("totalAnnouncements")}
+          value={dashboardStats.totalAnnouncements}
+          icon={Megaphone}
+          description={commonT("thisWeekCount", { count: dashboardStats.announcementsThisWeek })}
+          trend="up"
+          sparklineData={sparklines.announcements}
+          color="text-blue-500"
+          bgColor="bg-blue-500/10"
+          gradientFrom="from-blue-500/20"
+          gradientTo="to-blue-500/5"
+          loading={dashboardLoading}
+          index={0}
+        />
+        <StatsCard
+          title={t("activeUsers")}
+          value={dashboardStats.activeUsers}
+          icon={Users}
+          description={commonT("activeTodayCount", { count: dashboardStats.recentLoginsToday })}
+          trend="up"
+          sparklineData={sparklines.users}
+          color="text-emerald-500"
+          bgColor="bg-emerald-500/10"
+          gradientFrom="from-emerald-500/20"
+          gradientTo="to-emerald-500/5"
+          loading={dashboardLoading}
+          index={1}
+        />
+        <StatsCard
+          title={t("unreadNotifications")}
+          value={unreadCount}
+          icon={Bell}
+          description={commonT("pendingCount", { count: unreadCount })}
+          trend={unreadCount > 0 ? "up" : "down"}
+          sparklineData={sparklines.sparklineData}
+          color="text-purple-500"
+          bgColor="bg-purple-500/10"
+          gradientFrom="from-purple-500/20"
+          gradientTo="to-purple-500/5"
+          loading={dashboardLoading}
+          index={2}
+        />
+        <StatsCard
+          title={t("departments")}
+          value={dashboardStats.departments}
+          icon={Building2}
+          description={commonT("totalDepartments")}
+          trend="neutral"
+          sparklineData={sparklines.activity}
+          color="text-amber-500"
+          bgColor="bg-amber-500/10"
+          gradientFrom="from-amber-500/20"
+          gradientTo="to-amber-500/5"
+          loading={dashboardLoading}
+          index={3}
+        />
       </div>
 
       {/* Main Charts Row */}
       {!isEmployee && (
-        <div className="grid gap-6 lg:grid-cols-10">
-          {/* Weekly Activity Chart - Takes more space */}
-          {/* Weekly Activity Chart - Takes more space */}
-          <Card className="lg:col-span-4">
-            <Tabs defaultValue="bar" className="w-full">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Activity className="size-4 text-primary" />
-                      Weekly Activity
-                    </CardTitle>
-                    <CardDescription>
-                      Logins, announcements, and tasks completed this week
-                    </CardDescription>
-                  </div>
-                  <TabsList className="h-8">
-                    <TabsTrigger value="bar" className="px-2 text-xs">
-                      Bar
-                    </TabsTrigger>
-                    <TabsTrigger value="line" className="px-2 text-xs">
-                      Line
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[300px]">
-                  <TabsContent value="bar" className="h-[300px] mt-0">
-                    <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-                      <BarChart data={weeklyActivity} barCategoryGap="20%">
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          className="stroke-border"
-                          vertical={false}
-                        />
-                        <XAxis
-                          dataKey="name"
-                          className="text-xs"
-                          tick={{ fill: "var(--muted-foreground)" }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <YAxis
-                          className="text-xs"
-                          tick={{ fill: "var(--muted-foreground)" }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <Tooltip contentStyle={tooltipStyle} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: "12px" }} />
-                        <Bar
-                          dataKey="logins"
-                          name="Logins"
-                          fill="oklch(0.615 0.21 270)"
-                          radius={[4, 4, 0, 0]}
-                          maxBarSize={32}
-                        />
-                        <Bar
-                          dataKey="tasks"
-                          name="Tasks"
-                          fill="oklch(0.6 0.2 145)"
-                          radius={[4, 4, 0, 0]}
-                          maxBarSize={32}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </TabsContent>
-                  <TabsContent value="line" className="h-[300px] mt-0">
-                    <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
-                      <LineChart data={weeklyActivity}>
-                        <CartesianGrid
-                          strokeDasharray="3 3"
-                          className="stroke-border"
-                          vertical={false}
-                        />
-                        <XAxis
-                          dataKey="name"
-                          className="text-xs"
-                          tick={{ fill: "var(--muted-foreground)" }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <YAxis
-                          className="text-xs"
-                          tick={{ fill: "var(--muted-foreground)" }}
-                          axisLine={false}
-                          tickLine={false}
-                        />
-                        <Tooltip contentStyle={tooltipStyle} />
-                        <Legend iconType="circle" wrapperStyle={{ fontSize: "12px" }} />
-                        <Line
-                          type="monotone"
-                          dataKey="logins"
-                          name="Logins"
-                          stroke="oklch(0.615 0.21 270)"
-                          strokeWidth={2}
-                          dot={{ r: 4 }}
-                          activeDot={{ r: 6 }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="tasks"
-                          name="Tasks"
-                          stroke="oklch(0.6 0.2 145)"
-                          strokeWidth={2}
-                          dot={{ r: 4 }}
-                          activeDot={{ r: 6 }}
-                        />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </TabsContent>
-                </div>
-              </CardContent>
-            </Tabs>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <Card className="lg:col-span-1 border-muted/20 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <CalendarDays className="size-4 text-primary" />
+                {t("weeklyActivity")}
+              </CardTitle>
+              <CardDescription>{t("weeklyActivityDesc")}</CardDescription>
+            </CardHeader>
+            <CardContent className="px-2 pb-4">
+              <div className="h-[350px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={weeklyActivity} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.8 0.1 0 / 0.1)" />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "oklch(0.5 0.1 0)" }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "oklch(0.5 0.1 0)" }}
+                    />
+                    <RechartsTooltip contentStyle={tooltipStyle} />
+                    <Bar
+                      dataKey="logins"
+                      fill="var(--primary)"
+                      radius={[4, 4, 0, 0]}
+                      barSize={20}
+                      name={t("logins")}
+                    />
+                    <Bar
+                      dataKey="tasks"
+                      fill="oklch(0.7 0.2 250)"
+                      radius={[4, 4, 0, 0]}
+                      barSize={20}
+                      name={t("actions")}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
           </Card>
 
-          {/* Department Distribution (Pie Chart) */}
-          <Card className="lg:col-span-3">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Building2 className="size-4 text-primary" />
-                Team Distribution
-              </CardTitle>
-              <CardDescription>
-                Employees across {dashboardStats.departments} departments
-              </CardDescription>
+          <Card className="lg:col-span-1 shadow-sm border-muted/20">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div className="space-y-1">
+                <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                  <Megaphone className="size-4 text-primary" />
+                  {t("recentAnnouncements")}
+                </CardTitle>
+                <CardDescription>{t("recentAnnouncementsDesc")}</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" className="text-xs h-8" asChild>
+                <Link href="/announcements">{t("viewAll")}</Link>
+              </Button>
             </CardHeader>
             <CardContent>
               <div className="h-[200px]">
@@ -506,9 +467,9 @@ export default function DashboardPage() {
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip
+                    <RechartsTooltip
                       contentStyle={tooltipStyle}
-                      formatter={(value) => [`${value} employees`, ""]}
+                      formatter={(value: any) => [`${value} ${commonT("employeesCount", { count: value })}`, ""]}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -536,13 +497,13 @@ export default function DashboardPage() {
           </Card>
 
           {/* Category Breakdown */}
-          <Card className="lg:col-span-3">
+          <Card className="lg:col-span-1 shadow-sm border-muted/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CalendarDays className="size-4 text-primary" />
-                By Category
+                {t("byCategory")}
               </CardTitle>
-              <CardDescription>Announcement distribution</CardDescription>
+              <CardDescription>{t("announcementDistribution")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -558,7 +519,11 @@ export default function DashboardPage() {
                   return (
                     <div key={cat.category}>
                       <div className="mb-1 flex items-center justify-between text-sm">
-                        <span className="text-muted-foreground">{cat.category}</span>
+                        <span className="text-muted-foreground">
+                          {commonT.has(cat.category.toLowerCase().replace(/\s+/g, ""))
+                            ? commonT(cat.category.toLowerCase().replace(/\s+/g, ""))
+                            : cat.category}
+                        </span>
                         <span className="font-medium tabular-nums">
                           {cat.count}{" "}
                           <span className="text-xs text-muted-foreground">({cat.percentage}%)</span>
@@ -579,20 +544,21 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
-      )}
+      )
+      }
 
       {/* Recent Activity + Recent Announcements */}
-      <div className="grid gap-6 lg:grid-cols-5">
+      <div className="grid gap-6 lg:grid-cols-3">
         {/* Recent Activity Timeline */}
         {!isEmployee && (
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-1 border-muted/20 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <Clock className="size-4 text-primary" />
-                  Recent Activity
+                  {t("recentActivity")}
                 </CardTitle>
-                <CardDescription>What&apos;s happening across the portal</CardDescription>
+                <CardDescription>{t("recentActivityDesc")}</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
@@ -603,11 +569,11 @@ export default function DashboardPage() {
                   )
                   .slice(0, 5)
                   .map((activity) => (
-                    <div key={activity.id} className="relative pl-6 pb-4 last:pb-0">
+                    <div key={activity.id} className="relative ps-6 pb-4 last:pb-0">
                       {/* Vertical Line */}
-                      <div className="absolute left-[11px] top-7 bottom-0 w-[1px] bg-slate-200 dark:bg-slate-800 last:hidden" />
+                      <div className="absolute start-[11px] top-7 bottom-0 w-[1px] bg-slate-200 dark:bg-slate-800 last:hidden" />
 
-                      <div className="absolute left-0 top-1">
+                      <div className="absolute start-0 top-1">
                         <div className="flex size-6 items-center justify-center rounded-full bg-primary/5 text-primary">
                           <div className="size-2 rounded-full bg-current" />
                         </div>
@@ -615,8 +581,8 @@ export default function DashboardPage() {
 
                       <div className="text-sm leading-relaxed">
                         {activity.details &&
-                        activity.action === "Create" &&
-                        activity.target === "User" ? (
+                          activity.action === "Create" &&
+                          activity.target === "User" ? (
                           (() => {
                             let targetName = activity.details;
                             let targetRole = "Employee";
@@ -631,13 +597,13 @@ export default function DashboardPage() {
                             return (
                               <>
                                 <span className="text-foreground font-semibold">{targetName}</span>
-                                <span className="ml-2 inline-flex align-baseline mr-1.5">
+                                <span className="ms-2 inline-flex align-baseline me-1.5">
                                   <RoleBadge role={targetRole} size="sm" />
                                 </span>
-                                <span className="text-muted-foreground mr-1.5">
-                                  account created successfully by
+                                <span className="text-muted-foreground me-1.5">
+                                  {t("accountCreatedBy")}
                                 </span>
-                                <span className="font-bold text-primary mr-2">
+                                <span className="font-bold text-primary me-2">
                                   {activity.user === "System" ? "Murtadha Hassan" : activity.user}
                                 </span>
                                 <span className="inline-flex align-baseline">
@@ -650,18 +616,31 @@ export default function DashboardPage() {
                             );
                           })()
                         ) : (
-                          <>
-                            <span className="font-medium text-foreground">{activity.user}</span>{" "}
-                            <span className="text-muted-foreground lowercase">
-                              {activity.action}d
-                            </span>{" "}
-                            <span className="font-medium text-foreground">{activity.target}</span>
-                            {activity.details && (
-                              <span className="ml-1 text-muted-foreground">
-                                ({activity.details})
-                              </span>
-                            )}
-                          </>
+                          (() => {
+                            let detailsText = activity.details || "";
+                            if (detailsText.startsWith("Viewed: ")) {
+                              detailsText = detailsText.replace("Viewed:", t("detailsViewed"));
+                            } else if (detailsText.startsWith("Deleted user ID:")) {
+                              detailsText = detailsText.replace("Deleted user ID:", t("detailsDeletedId"));
+                            }
+
+                            const localizedAction = t.has(`action${activity.action}`) ? t(`action${activity.action}`) : activity.action;
+                            const localizedTarget = t.has(`target${activity.target}`) ? t(`target${activity.target}`) : activity.target;
+
+                            return (
+                              <>
+                                <span className="font-medium text-foreground">{activity.user}</span>{" "}
+                                <span className="text-muted-foreground lowercase">
+                                  {t("activityAction", { action: localizedAction, target: localizedTarget })}
+                                </span>
+                                {detailsText && (
+                                  <span className="ms-1 text-muted-foreground">
+                                    ({detailsText})
+                                  </span>
+                                )}
+                              </>
+                            );
+                          })()
                         )}
                       </div>
                       <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -676,23 +655,23 @@ export default function DashboardPage() {
         )}
 
         {/* Recent Announcements */}
-        <Card className={cn("flex flex-col", isEmployee ? "lg:col-span-5" : "lg:col-span-3")}>
+        <Card className={cn("flex flex-col border-muted/20 shadow-sm", isEmployee ? "lg:col-span-3" : "lg:col-span-2")}>
           <CardHeader className="flex flex-row items-center justify-between border-b">
             <div className="flex items-center gap-3">
               <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
                 <MegaphoneIcon className="size-4 text-primary" />
               </div>
               <div>
-                <CardTitle className="text-base">Recent Announcements</CardTitle>
+                <CardTitle className="text-base">{t("recentAnnouncements")}</CardTitle>
                 <CardDescription className="text-xs">
-                  {recentAnnouncements.length} published updates
+                  {commonT("publishedUpdatesCount", { count: recentAnnouncements.length })}
                 </CardDescription>
               </div>
             </div>
             <Button variant="outline" size="sm" asChild>
               <Link href="/announcements">
-                View All
-                <ArrowUpRight className="ml-1 size-3" />
+                {commonT("viewAll")}
+                <ArrowUpRight className="ms-1 size-3" />
               </Link>
             </Button>
           </CardHeader>
@@ -710,7 +689,7 @@ export default function DashboardPage() {
                   <div
                     key={ann.id}
                     onClick={() => handleOpenAnn(ann)}
-                    className={`group relative cursor-pointer border-l-[3px] ${config.border} transition-colors hover:bg-muted/30`}
+                    className={`group relative cursor-pointer border-s-[3px] ${config.border} transition-colors hover:bg-muted/30`}
                   >
                     <div className="flex items-start gap-3 px-5 py-4">
                       {/* Avatar */}
@@ -719,8 +698,8 @@ export default function DashboardPage() {
                           <User className="size-4 opacity-80" />
                         </div>
                         {ann.pinned && (
-                          <div className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-amber-100 text-[8px] dark:bg-amber-900/50">
-                            ðŸ“Œ
+                          <div className="absolute -end-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-amber-100 text-[8px] dark:bg-amber-900/50">
+                            <Pin className="size-2 text-amber-700 dark:text-amber-400" />
                           </div>
                         )}
                       </div>
@@ -737,7 +716,9 @@ export default function DashboardPage() {
                                 className={`inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-medium transition-colors ${cBg}`}
                               >
                                 <DynamicCategoryIcon icon={cIcon} className="size-2.5" />
-                                {ann.category}
+                                {commonT.has(ann.category.toLowerCase().replace(/\s+/g, ""))
+                                  ? commonT(ann.category.toLowerCase().replace(/\s+/g, ""))
+                                  : ann.category}
                               </span>
                               <span
                                 className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium transition-all ${config.badge}`}
@@ -752,7 +733,9 @@ export default function DashboardPage() {
                                     className={`relative inline-flex size-1.5 rounded-full ${config.innerDot}`}
                                   ></span>
                                 </span>
-                                {ann.priority}
+                                {commonT.has(ann.priority.toLowerCase())
+                                  ? commonT(ann.priority.toLowerCase())
+                                  : ann.priority}
                               </span>
                             </div>
                             <p className="mt-1 line-clamp-1 text-xs text-muted-foreground leading-relaxed">
@@ -773,14 +756,14 @@ export default function DashboardPage() {
                             </span>
                             <RoleBadge role={ann.author?.role || "Employee"} size="sm" />
                           </span>
-                          <span className="ml-auto flex items-center gap-3 text-[11px] text-muted-foreground">
+                          <span className="ms-auto flex items-center gap-3 text-[11px] text-muted-foreground">
                             <span className="flex items-center gap-1 tabular-nums">
                               <Eye className="size-3" />
                               {ann.views}
                             </span>
                             <span className="flex items-center gap-1 tabular-nums">
                               <Clock className="size-3" />
-                              {getDate(ann)}
+                              {getDate(ann, format)}
                             </span>
                           </span>
                         </div>
@@ -795,35 +778,35 @@ export default function DashboardPage() {
       </div>
 
       {/* Quick Actions */}
-      <Card>
+      <Card className="border-muted/20 shadow-sm">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks and shortcuts</CardDescription>
+          <CardTitle>{t("quickActions")}</CardTitle>
+          <CardDescription>{t("quickActionsDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
             <Button asChild>
               <Link href="/admin/announcements">
-                <Megaphone className="mr-2 size-4" />
-                New Announcement
+                <Megaphone className="me-2 size-4" />
+                {t("newAnnouncement")}
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/notifications">
-                <Bell className="mr-2 size-4" />
-                Notifications
+                <Bell className="me-2 size-4" />
+                {t("notifications")}
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/profile">
-                <User className="mr-2 size-4" />
-                My Profile
+                <User className="me-2 size-4" />
+                {t("profile")}
               </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link href="/settings">
-                <Settings className="mr-2 size-4" />
-                Settings
+                <Settings className="me-2 size-4" />
+                {t("settings")}
               </Link>
             </Button>
           </div>
@@ -845,7 +828,7 @@ export default function DashboardPage() {
                 1,
                 Math.ceil((selectedAnn.content || "").split(/\s+/).length / 200)
               );
-              const formattedDate = getDateLong(selectedAnn);
+              const formattedDate = getDateLong(selectedAnn, format);
               const viewCount = (selectedAnn.views || 0) + 1;
 
               return (
@@ -876,13 +859,13 @@ export default function DashboardPage() {
                       {selectedAnn.pinned && (
                         <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50 dark:bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 ring-1 ring-amber-200/60 dark:ring-amber-500/20">
                           <Pin className="size-3" />
-                          Pinned
+                          {commonT("pinned")}
                         </span>
                       )}
                     </div>
 
                     {/* Title */}
-                    <DialogHeader className="text-left space-y-0 mb-6">
+                    <DialogHeader className="text-start space-y-0 mb-6">
                       <DialogTitle className="text-xl sm:text-2xl lg:text-[28px] font-extrabold leading-[1.15] tracking-tight text-foreground">
                         {selectedAnn.title}
                       </DialogTitle>
@@ -905,7 +888,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
 
-                      <div className="hidden sm:block h-6 w-px bg-border/60" />
+                      <div className="hidden lg:block h-6 w-px bg-border/60" />
 
                       {/* Date */}
                       <div className="flex items-center gap-2 text-muted-foreground">
@@ -913,20 +896,20 @@ export default function DashboardPage() {
                         <span className="text-xs font-medium tabular-nums">{formattedDate}</span>
                       </div>
 
-                      <div className="hidden sm:block h-6 w-px bg-border/60" />
+                      <div className="hidden lg:block h-6 w-px bg-border/60" />
 
                       {/* Views */}
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Eye className="size-3.5 shrink-0" />
                         <span className="text-xs font-medium tabular-nums">
-                          {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+                          {annT("viewsCount", { count: viewCount })}
                         </span>
                       </div>
 
                       {/* Reading Time */}
-                      <div className="flex items-center gap-2 text-muted-foreground sm:ml-auto">
+                      <div className="flex items-center gap-2 text-muted-foreground lg:ms-auto">
                         <Clock className="size-3.5 shrink-0" />
-                        <span className="text-xs font-medium">{readingTime} min read</span>
+                        <span className="text-xs font-medium">{t("readingTime", { count: readingTime })}</span>
                       </div>
                     </div>
                   </div>
@@ -971,7 +954,7 @@ export default function DashboardPage() {
                         </div>
 
                         {/* Sidebar */}
-                        <aside className="space-y-6 lg:border-l lg:border-border/30 lg:pl-8">
+                        <aside className="space-y-6 lg:border-s lg:border-border/30 lg:ps-8">
                           <AttachmentsList announcementId={selectedAnn.id} />
                         </aside>
                       </div>
@@ -987,7 +970,7 @@ export default function DashboardPage() {
                           size="sm"
                           className="h-8 rounded-lg text-xs font-medium px-4"
                         >
-                          Close
+                          {commonT("close")}
                         </Button>
                       </DialogClose>
                     </div>
@@ -997,17 +980,19 @@ export default function DashboardPage() {
             })()}
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 }
 
 function AttachmentsList({ announcementId }: { announcementId: string }) {
   const { attachments, loading } = useAnnouncementAttachments(announcementId);
+  const t = useTranslations("Announcements");
 
   if (loading) return null;
   if (attachments.length === 0) return null;
 
-  const handleDownload = async (file: any) => {
+  const handleDownload = async (file: any, e: React.MouseEvent) => {
+    e.stopPropagation();
     const { data, error } = await supabase.storage.from("announcements").download(file.file_path);
 
     if (error) {
@@ -1025,39 +1010,71 @@ function AttachmentsList({ announcementId }: { announcementId: string }) {
     document.body.removeChild(a);
   };
 
+  const handleView = (file: any) => {
+    const { data } = supabase.storage.from("announcements").getPublicUrl(file.file_path);
+    if (data?.publicUrl) {
+      window.open(data.publicUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
         <Paperclip className="size-3.5" />
-        Attachments
+        {t("attachments")}
       </h4>
       <div className="grid gap-3">
         {attachments.map((file) => (
           <div
             key={file.id}
-            onClick={() => handleDownload(file)}
-            className="group flex flex-col p-4 rounded-2xl border border-border/50 bg-muted/5 hover:bg-primary/[0.03] hover:border-primary/20 transition-all cursor-pointer shadow-sm hover:shadow-md"
+            onClick={() => handleView(file)}
+            className="group flex items-center gap-3 p-3 rounded-2xl border border-border/50 bg-muted/5 hover:bg-primary/[0.03] hover:border-primary/20 transition-all cursor-pointer shadow-sm hover:shadow-md"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="size-10 shrink-0 flex items-center justify-center rounded-xl bg-background border shadow-sm group-hover:bg-primary/10 transition-colors">
-                <FileText className="size-5 text-primary/60 group-hover:text-primary transition-colors" />
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8 rounded-full bg-background/50 border opacity-0 group-hover:opacity-100 transition-all"
-              >
-                <Download className="size-4" />
-              </Button>
+            <div className="size-10 shrink-0 flex items-center justify-center rounded-xl bg-background border shadow-sm group-hover:bg-primary/10 transition-colors">
+              <FileText className="size-5 text-primary/60 group-hover:text-primary transition-colors" />
             </div>
-            <div className="flex flex-col min-w-0">
+
+            <div className="flex flex-col min-w-0 flex-1">
               <span className="text-sm font-bold truncate group-hover:text-primary transition-colors">
                 {file.file_name}
               </span>
-              <span className="text-[10px] text-muted-foreground font-semibold mt-1">
-                {(file.file_size / 1024).toFixed(1)} KB â€¢{" "}
-                {file.file_type.split("/").pop()?.toUpperCase()}
+              <span className="text-[10px] text-muted-foreground font-semibold mt-0.5">
+                {(file.file_size / 1024).toFixed(1)} KB •{" "}
+                {file.file_type.split("/").pop()?.toUpperCase() || "FILE"}
               </span>
+            </div>
+
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 rounded-full bg-background/50 hover:bg-background border focus:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleView(file);
+                    }}
+                  >
+                    <ExternalLink className="size-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">{t("viewFile")}</TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8 rounded-full bg-background/50 hover:bg-background border focus:opacity-100"
+                    onClick={(e) => handleDownload(file, e)}
+                  >
+                    <Download className="size-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">{t("downloadFile")}</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         ))}
@@ -1065,3 +1082,4 @@ function AttachmentsList({ announcementId }: { announcementId: string }) {
     </div>
   );
 }
+

@@ -1,6 +1,9 @@
 import withPWAInit from "@ducanh2912/next-pwa";
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 const withPWA = withPWAInit({
   dest: "public",
@@ -21,17 +24,18 @@ const nextConfig: NextConfig = {
   turbopack: {},
 };
 
-// Apply PWA wrapper
-const pwaConfig = withPWA(nextConfig);
+// Apply wraps - Apply next-intl first
+const intlConfig = withNextIntl(nextConfig);
+const pwaConfig = withPWA(intlConfig);
 
 // Only wrap with Sentry when DSN is configured
 const finalConfig = process.env.NEXT_PUBLIC_SENTRY_DSN
   ? withSentryConfig(pwaConfig, {
-      silent: true,
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      widenClientFileUpload: true,
-    })
+    silent: true,
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    widenClientFileUpload: true,
+  })
   : pwaConfig;
 
 export default finalConfig;

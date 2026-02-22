@@ -12,6 +12,18 @@ import {
   type Action,
 } from "kbar";
 import React from "react";
+import { useUserProfile, useUser } from "@/hooks/use-supabase";
+import {
+  LayoutDashboard,
+  Megaphone,
+  Bell,
+  User,
+  Settings,
+  BarChart,
+  Users,
+  MessageSquare,
+  FileText,
+} from "lucide-react";
 
 const actions: Action[] = [
   {
@@ -20,7 +32,8 @@ const actions: Action[] = [
     shortcut: ["d"],
     keywords: "home overview",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <LayoutDashboard className="size-4" />,
   },
   {
     id: "announcements",
@@ -28,7 +41,8 @@ const actions: Action[] = [
     shortcut: ["a"],
     keywords: "news updates posts",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <Megaphone className="size-4" />,
   },
   {
     id: "notifications",
@@ -36,7 +50,8 @@ const actions: Action[] = [
     shortcut: ["n"],
     keywords: "alerts unread",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <Bell className="size-4" />,
   },
   {
     id: "profile",
@@ -44,7 +59,8 @@ const actions: Action[] = [
     shortcut: ["p"],
     keywords: "account user info",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <User className="size-4" />,
   },
   {
     id: "settings",
@@ -52,7 +68,8 @@ const actions: Action[] = [
     shortcut: ["s"],
     keywords: "preferences config",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <Settings className="size-4" />,
   },
   {
     id: "analytics",
@@ -60,28 +77,32 @@ const actions: Action[] = [
     shortcut: [],
     keywords: "charts data insights statistics",
     section: "Navigation",
-    perform: () => {},
+    perform: () => { },
+    icon: <BarChart className="size-4" />,
   },
   {
     id: "manage-users",
     name: "Manage Users",
     keywords: "admin users accounts",
     section: "Administration",
-    perform: () => {},
+    perform: () => { },
+    icon: <Users className="size-4" />,
   },
   {
     id: "manage-announcements",
     name: "Manage Announcements",
     keywords: "admin posts create edit",
     section: "Administration",
-    perform: () => {},
+    perform: () => { },
+    icon: <MessageSquare className="size-4" />,
   },
   {
     id: "audit-log",
     name: "Audit Log",
     keywords: "admin logs history actions",
     section: "Administration",
-    perform: () => {},
+    perform: () => { },
+    icon: <FileText className="size-4" />,
   },
 ];
 
@@ -110,10 +131,10 @@ function RenderResults() {
           </div>
         ) : (
           <div
-            className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-              active ? "bg-primary/10 text-foreground" : "text-muted-foreground"
-            }`}
+            className={`flex cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${active ? "bg-primary/10 text-foreground" : "text-muted-foreground hover:bg-muted/50"
+              }`}
           >
+            {item.icon as React.ReactNode}
             <span className="font-medium">{item.name}</span>
             {item.shortcut?.length ? (
               <kbd className="ml-auto rounded border bg-muted px-1.5 py-0.5 text-[10px] font-mono">
@@ -129,14 +150,26 @@ function RenderResults() {
 
 export function CommandBarProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const { user } = useUser();
+  const { profile } = useUserProfile(user?.id);
 
-  const routeActions = actions.map((action) => ({
-    ...action,
-    perform: () => {
-      const route = routeMap[action.id];
-      if (route) router.push(route);
-    },
-  }));
+  const isAdmin = profile?.role === "Admin";
+
+  const routeActions = actions
+    .filter((action) => {
+      // Hide Administration section from non-admins
+      if (action.section === "Administration" && !isAdmin) {
+        return false;
+      }
+      return true;
+    })
+    .map((action) => ({
+      ...action,
+      perform: () => {
+        const route = routeMap[action.id];
+        if (route) router.push(route);
+      },
+    }));
 
   return (
     <KBarProvider actions={routeActions}>
@@ -147,7 +180,7 @@ export function CommandBarProvider({ children }: { children: React.ReactNode }) 
               className="w-full border-b bg-transparent px-4 py-3.5 text-sm outline-none placeholder:text-muted-foreground"
               defaultPlaceholder="Type a command or search..."
             />
-            <div className="max-h-[320px] overflow-y-auto pb-2">
+            <div className="pb-2">
               <RenderResults />
             </div>
           </KBarAnimator>

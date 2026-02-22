@@ -63,6 +63,7 @@ import { useUsersList } from "@/hooks/use-supabase";
 import { RoleBadge } from "@/components/ui/role-badge";
 import { supabase } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
+import { useTranslations } from "next-intl";
 
 const userStatusConfig: Record<string, string> = {
   Active:
@@ -80,6 +81,9 @@ export default function ManageUsersPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
 
   // Edit states
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -226,7 +230,7 @@ export default function ManageUsersPage() {
     () => [
       {
         accessorKey: "name",
-        header: "Name",
+        header: commonT("name"),
         cell: ({ row }) => (
           <div className="flex items-center gap-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 text-primary">
@@ -241,16 +245,16 @@ export default function ManageUsersPage() {
       },
       {
         accessorKey: "role",
-        header: "Role",
+        header: commonT("role"),
         cell: ({ row }) => <RoleBadge role={row.original.role} size="md" />,
       },
       {
         accessorKey: "department",
-        header: "Department",
+        header: commonT("department"),
       },
       {
         accessorKey: "status",
-        header: "Status",
+        header: commonT("status"),
         cell: ({ row }) => {
           const sCfg = userStatusConfig[row.original.status] || userStatusConfig.Inactive;
           return (
@@ -264,7 +268,7 @@ export default function ManageUsersPage() {
       },
       {
         accessorKey: "join_date",
-        header: "Joined",
+        header: commonT("joinDate"),
         cell: ({ row }) => {
           const raw = row.original.join_date;
           if (!raw) return "";
@@ -272,10 +276,10 @@ export default function ManageUsersPage() {
           return isNaN(d.getTime())
             ? ""
             : d.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              });
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            });
         },
       },
       {
@@ -290,19 +294,19 @@ export default function ManageUsersPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => handleEditOpen(row.original)}>
-                <Edit className="mr-2 size-4" />
-                Edit
+                <Edit className="me-2 size-4" />
+                {commonT("edit")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleToggleStatus(row.original)}>
                 {row.original.status === "Active" ? (
                   <>
-                    <UserX className="mr-2 size-4" />
-                    Deactivate
+                    <UserX className="me-2 size-4" />
+                    {t("inactive")}
                   </>
                 ) : (
                   <>
-                    <UserCheck className="mr-2 size-4" />
-                    Activate
+                    <UserCheck className="me-2 size-4" />
+                    {t("active")}
                   </>
                 )}
               </DropdownMenuItem>
@@ -311,8 +315,8 @@ export default function ManageUsersPage() {
                 className="text-destructive focus:text-destructive"
                 onClick={() => handleDeleteClick(row.original)}
               >
-                <Trash2 className="mr-2 size-4" />
-                Delete
+                <Trash2 className="me-2 size-4" />
+                {commonT("delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -344,7 +348,7 @@ export default function ManageUsersPage() {
 
   const statsData = [
     {
-      title: "Total Users",
+      title: t("totalUsers"),
       value: stats.total,
       icon: Users,
       color: "text-blue-500",
@@ -353,7 +357,7 @@ export default function ManageUsersPage() {
       gradientTo: "to-blue-500/5",
     },
     {
-      title: "Active",
+      title: t("active"),
       value: stats.active,
       icon: UserCheck,
       color: "text-emerald-500",
@@ -362,7 +366,7 @@ export default function ManageUsersPage() {
       gradientTo: "to-emerald-500/5",
     },
     {
-      title: "Inactive",
+      title: t("inactive"),
       value: stats.inactive,
       icon: UserIcon,
       color: "text-slate-500",
@@ -371,7 +375,7 @@ export default function ManageUsersPage() {
       gradientTo: "to-slate-500/5",
     },
     {
-      title: "Suspended",
+      title: t("suspended"),
       value: stats.suspended,
       icon: UserX,
       color: "text-red-500",
@@ -385,12 +389,12 @@ export default function ManageUsersPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Manage Users</h1>
-          <p className="text-muted-foreground">Create, edit, and manage user accounts.</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("manageUsers")}</h1>
+          <p className="text-muted-foreground">{t("manageUsersDesc")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="w-full sm:w-auto">
-          <Plus className="mr-2 size-4" />
-          Add User
+          <Plus className="me-2 size-4" />
+          {t("addUser")}
         </Button>
       </div>
 
@@ -422,18 +426,18 @@ export default function ManageUsersPage() {
       <Card>
         <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4">
           <div>
-            <CardTitle>User Directory</CardTitle>
+            <CardTitle>{t("userDirectory")}</CardTitle>
             <CardDescription>
-              {table.getFilteredRowModel().rows.length} user(s) found
+              {t("usersFound", { count: table.getFilteredRowModel().rows.length })}
             </CardDescription>
           </div>
           <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search users..."
+              placeholder={t("searchUsers")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
         </CardHeader>
@@ -457,7 +461,7 @@ export default function ManageUsersPage() {
                 {loading && !data.length ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center animate-pulse">
-                      Loading live users...
+                      {t("loadingUsers")}
                     </TableCell>
                   </TableRow>
                 ) : table.getRowModel().rows.length ? (
@@ -473,7 +477,7 @@ export default function ManageUsersPage() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No results found.
+                      {commonT("noResults")}
                     </TableCell>
                   </TableRow>
                 )}
@@ -484,7 +488,7 @@ export default function ManageUsersPage() {
           {/* Pagination */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
             <p className="text-sm text-muted-foreground">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {commonT("page")} {table.getState().pagination.pageIndex + 1} {commonT("of")} {table.getPageCount()}
             </p>
             <div className="flex gap-2">
               <Button
@@ -494,8 +498,8 @@ export default function ManageUsersPage() {
                 disabled={!table.getCanPreviousPage()}
                 className="flex-1 sm:flex-none"
               >
-                <ChevronLeft className="mr-1 size-4" />
-                Previous
+                <ChevronLeft className="me-1 size-4" />
+                {commonT("previous")}
               </Button>
               <Button
                 variant="outline"
@@ -504,8 +508,8 @@ export default function ManageUsersPage() {
                 disabled={!table.getCanNextPage()}
                 className="flex-1 sm:flex-none"
               >
-                Next
-                <ChevronRight className="ml-1 size-4" />
+                {commonT("next")}
+                <ChevronRight className="ms-1 size-4" />
               </Button>
             </div>
           </div>
@@ -516,29 +520,29 @@ export default function ManageUsersPage() {
       <Dialog open={dialogOpen} onOpenChange={handleDialogChange}>
         <DialogContent className="w-[95vw] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add New User</DialogTitle>
+            <DialogTitle>{t("addNewUser")}</DialogTitle>
             <DialogDescription>
-              Create a new user account for the employee portal.
+              {t("createUserDesc")}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onCreateUser)}>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="user-name">Full Name</Label>
+                <Label htmlFor="user-name">{t("fullName")}</Label>
                 <Input
                   id="user-name"
-                  placeholder="Enter full name"
+                  placeholder={t("fullNamePlaceholder")}
                   {...register("name")}
                   aria-invalid={!!errors.name}
                 />
                 {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="user-email">Email</Label>
+                <Label htmlFor="user-email">{commonT("email")}</Label>
                 <Input
                   id="user-email"
                   type="email"
-                  placeholder="Enter email address"
+                  placeholder={t("emailPlaceholder")}
                   {...register("email")}
                   aria-invalid={!!errors.email}
                 />
@@ -546,20 +550,20 @@ export default function ManageUsersPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="user-role">Role</Label>
+                  <Label htmlFor="user-role">{commonT("role")}</Label>
                   <Input
                     id="user-role"
-                    placeholder="e.g. Employee"
+                    placeholder={t("rolePlaceholder")}
                     {...register("role")}
                     aria-invalid={!!errors.role}
                   />
                   {errors.role && <p className="text-xs text-destructive">{errors.role.message}</p>}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="user-dept">Department</Label>
+                  <Label htmlFor="user-dept">{commonT("department")}</Label>
                   <Input
                     id="user-dept"
-                    placeholder="e.g. Engineering"
+                    placeholder={t("deptPlaceholder")}
                     {...register("department")}
                     aria-invalid={!!errors.department}
                   />
@@ -571,10 +575,10 @@ export default function ManageUsersPage() {
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => handleDialogChange(false)}>
-                Cancel
+                {commonT("cancel")}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating..." : "Create User"}
+                {isSubmitting ? commonT("creating") : t("createUser")}
               </Button>
             </DialogFooter>
           </form>
@@ -591,15 +595,15 @@ export default function ManageUsersPage() {
       >
         <DialogContent className="w-[95vw] sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
+            <DialogTitle>{t("editUser")}</DialogTitle>
             <DialogDescription>
-              Update user information. Changes are saved to the database.
+              {t("editUserDesc")}
             </DialogDescription>
           </DialogHeader>
           {editUser && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label htmlFor="edit-name">Full Name</Label>
+                <Label htmlFor="edit-name">{t("fullName")}</Label>
                 <Input
                   id="edit-name"
                   value={editName}
@@ -608,7 +612,7 @@ export default function ManageUsersPage() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="edit-role">Role</Label>
+                  <Label htmlFor="edit-role">{commonT("role")}</Label>
                   <select
                     id="edit-role"
                     value={editRole}
@@ -623,7 +627,7 @@ export default function ManageUsersPage() {
                   </select>
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="edit-status">Status</Label>
+                  <Label htmlFor="edit-status">{commonT("status")}</Label>
                   <select
                     id="edit-status"
                     value={editStatus}
@@ -639,7 +643,7 @@ export default function ManageUsersPage() {
                 </div>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-department">Department</Label>
+                <Label htmlFor="edit-department">{commonT("department")}</Label>
                 <Input
                   id="edit-department"
                   value={editDepartment}
@@ -647,12 +651,12 @@ export default function ManageUsersPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="edit-phone">Phone</Label>
+                <Label htmlFor="edit-phone">{commonT("phone")}</Label>
                 <Input
                   id="edit-phone"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
-                  placeholder="e.g. +1 (555) 123-4567"
+                  placeholder={t("phonePlaceholder")}
                 />
               </div>
             </div>
@@ -665,10 +669,10 @@ export default function ManageUsersPage() {
                 setEditUser(null);
               }}
             >
-              Cancel
+              {commonT("cancel")}
             </Button>
             <Button onClick={handleEditSave} disabled={editSaving}>
-              {editSaving ? "Saving..." : "Save Changes"}
+              {editSaving ? commonT("saving") : commonT("save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -687,31 +691,30 @@ export default function ManageUsersPage() {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                 <UserCheck className="h-5 w-5" />
               </span>
-              User Created Successfully
+              {t("userCreated")}
             </DialogTitle>
             <DialogDescription>
-              The new user account has been created. Please securely share these credentials with
-              the employee. <strong>They will not be shown again.</strong>
+              {t("userCreatedDesc")}
             </DialogDescription>
           </DialogHeader>
           {createdUserDetails && (
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
-                <Label>Email</Label>
+                <Label>{commonT("email")}</Label>
                 <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-muted px-3 py-2 text-sm">
                   <span>{createdUserDetails.email}</span>
                 </div>
               </div>
               {createdUserDetails.tempPassword && (
                 <div className="grid gap-2">
-                  <Label>Your Password</Label>
+                  <Label>{t("yourPassword")}</Label>
                   <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-muted px-3 py-2 text-sm">
                     <span className="font-mono tracking-wider">
                       {createdUserDetails.tempPassword}
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    The user can log in with this password immediately.
+                    {t("loginImmediately")}
                   </p>
                 </div>
               )}
@@ -735,10 +738,10 @@ export default function ManageUsersPage() {
               {copied ? (
                 <>
                   <Check className="mr-2 h-4 w-4 text-emerald-500" />
-                  Copied!
+                  {commonT("copied")}
                 </>
               ) : (
-                "Copy Credentials"
+                t("copyCredentials")
               )}
             </Button>
           </DialogFooter>
@@ -753,12 +756,10 @@ export default function ManageUsersPage() {
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-red-600">
                 <AlertTriangle className="h-5 w-5" />
               </span>
-              Confirm Deletion
+              {t("confirmDeletion")}
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete <strong>{userToDelete?.name}</strong>? This action
-              will remove the user from the database and Auth system.{" "}
-              <strong>This cannot be undone.</strong>
+              {t("deleteConfirmDesc", { name: userToDelete?.name })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="mt-4 flex gap-2 sm:justify-end">
@@ -767,10 +768,10 @@ export default function ManageUsersPage() {
               onClick={() => setIsDeleteDialogOpen(false)}
               disabled={isDeleting}
             >
-              Cancel
+              {commonT("cancel")}
             </Button>
             <Button variant="destructive" onClick={handleDeleteConfirm} disabled={isDeleting}>
-              {isDeleting ? "Deleting..." : "Delete User"}
+              {isDeleting ? commonT("deleting") : t("deleteUser")}
             </Button>
           </DialogFooter>
         </DialogContent>

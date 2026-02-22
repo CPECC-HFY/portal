@@ -16,9 +16,9 @@ export function PortalShell({ children }: { children: React.ReactNode }) {
         <div
           className={cn(
             "flex flex-1 flex-col transition-all duration-300 ease-in-out w-full",
-            "lg:ml-[68px]", // Desktop default (collapsed)
-            isOpen && "lg:ml-64", // Desktop open
-            !isOpen && "ml-0" // Ensure no margin on mobile or when forced closed
+            "lg:ms-[68px]", // Desktop default (collapsed)
+            isOpen && "lg:ms-64", // Desktop open
+            !isOpen && "ms-0" // Ensure no margin on mobile or when forced closed
           )}
         >
           <Header />

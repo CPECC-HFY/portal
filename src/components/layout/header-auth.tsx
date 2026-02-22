@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
 import { cn, stripHtml } from "@/lib/utils";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +30,8 @@ export function HeaderAuth() {
     clearAllNotifications,
   } = useNotificationsList(user?.id);
   const { profile } = useUserProfile(user?.id);
+  const t = useTranslations("Navigation");
+  const rolesT = useTranslations("Roles");
 
   const handleLogout = async () => {
     await logAudit("Logout", "System", "User logged out");
@@ -48,7 +51,7 @@ export function HeaderAuth() {
           <Button variant="ghost" size="icon" className="relative group" type="button">
             <Bell className="size-[1.2rem] transition-transform group-hover:rotate-12" />
             {unreadCount > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground animate-in zoom-in duration-300">
+              <span className="absolute -end-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground animate-in zoom-in duration-300">
                 {unreadCount > 9 ? "9+" : unreadCount}
               </span>
             )}
@@ -59,7 +62,7 @@ export function HeaderAuth() {
           className="w-80 p-0 overflow-hidden shadow-2xl border-none rounded-xl"
         >
           <div className="flex items-center justify-between px-4 py-3 bg-muted/40 border-b border-border/50">
-            <DropdownMenuLabel className="font-bold text-sm">Notifications</DropdownMenuLabel>
+            <DropdownMenuLabel className="font-bold text-sm">{t("notifications")}</DropdownMenuLabel>
             <div className="flex items-center gap-1">
               {unreadCount > 0 && (
                 <Button
@@ -71,7 +74,7 @@ export function HeaderAuth() {
                     markAllRead();
                   }}
                 >
-                  Mark all as read
+                  {t("markAllAsRead")}
                 </Button>
               )}
               {(notifications?.length || 0) > 0 && (
@@ -84,7 +87,7 @@ export function HeaderAuth() {
                     clearAllNotifications();
                   }}
                 >
-                  Clear all
+                  {t("clearAll")}
                 </Button>
               )}
             </div>
@@ -93,9 +96,9 @@ export function HeaderAuth() {
             {!notifications || notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-center px-4">
                 <Bell className="size-10 text-muted-foreground/20 mb-3" />
-                <p className="text-sm font-medium text-foreground/80">All caught up!</p>
+                <p className="text-sm font-medium text-foreground/80">{t("allCaughtUp")}</p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  No new notifications at the moment.
+                  {t("noNewNotifications")}
                 </p>
               </div>
             ) : (
@@ -166,7 +169,7 @@ export function HeaderAuth() {
             href="/notifications"
             className="block text-center py-2.5 text-xs font-semibold bg-muted/20 border-t border-border/50 hover:bg-muted/40 transition-colors text-primary"
           >
-            View all notifications
+            {t("viewAllNotifications")}
           </Link>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -190,7 +193,7 @@ export function HeaderAuth() {
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">{userName}</p>
               <p className="text-xs leading-none text-muted-foreground truncate">
-                {profile?.role || "Employee"}
+                {profile?.role ? rolesT(profile.role.toLowerCase()) : rolesT("employee")}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -198,14 +201,14 @@ export function HeaderAuth() {
           <DropdownMenuGroup>
             <DropdownMenuItem asChild>
               <Link href="/profile" className="cursor-pointer">
-                <User className="mr-2 size-4" />
-                <span>Profile</span>
+                <User className="me-2 size-4" />
+                <span>{t("profile")}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/settings" className="cursor-pointer">
-                <Settings className="mr-2 size-4" />
-                <span>Settings</span>
+                <Settings className="me-2 size-4" />
+                <span>{t("settings")}</span>
               </Link>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -214,8 +217,8 @@ export function HeaderAuth() {
             className="text-destructive focus:bg-destructive/10 cursor-pointer"
             onClick={handleLogout}
           >
-            <LogOut className="mr-2 size-4" />
-            <span>Log out</span>
+            <LogOut className="me-2 size-4" />
+            <span>{t("logOut")}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

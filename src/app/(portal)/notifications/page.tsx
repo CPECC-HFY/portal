@@ -21,6 +21,7 @@ import { useNotificationsList, useUser } from "@/hooks/use-supabase";
 import { supabase } from "@/lib/supabase";
 import { cn, stripHtml } from "@/lib/utils";
 import Link from "next/link";
+import { useTranslations, useFormatter } from "next-intl";
 
 const typeIcons: Record<string, React.ElementType> = {
   announcement: Megaphone,
@@ -47,10 +48,14 @@ function NotificationItem({
   notification,
   onMarkRead,
   onClear,
+  t,
+  format,
 }: {
   notification: any;
   onMarkRead: (id: string) => void;
   onClear: (id: string) => void;
+  t: any;
+  format: any;
 }) {
   const Icon =
     typeIcons[notification.link?.includes("announcement") ? "announcement" : "mention"] || Bell;
@@ -88,27 +93,27 @@ function NotificationItem({
             className={cn(
               "inline-flex w-[105px] justify-center items-center gap-1.5 rounded-md px-2 py-0.5 text-[10px] font-medium transition-colors",
               typeBadgeColors[type] ||
-                "bg-slate-500/10 text-slate-700 dark:text-slate-400 border border-slate-500/20"
+              "bg-slate-500/10 text-slate-700 dark:text-slate-400 border border-slate-500/20"
             )}
           >
             <Icon className="shrink-0 size-3" />
-            <span className="truncate capitalize">{type}</span>
+            <span className="truncate capitalize">{t(type)}</span>
           </span>
           <span className="text-xs text-muted-foreground">
-            {formatRelativeTime(notification.created_at)}
+            {formatRelativeTime(notification.created_at, t, format)}
           </span>
           {!notification.is_read && (
             <Button
               variant="ghost"
               size="sm"
-              className="ml-auto h-7 gap-1 text-xs opacity-0 transition-opacity group-hover:opacity-100"
+              className="ms-auto h-7 gap-1 text-xs opacity-0 transition-opacity group-hover:opacity-100"
               onClick={(e) => {
                 e.stopPropagation();
                 onMarkRead(notification.id);
               }}
             >
               <Check className="size-3" />
-              Mark read
+              {t("markRead")}
             </Button>
           )}
           <Button
@@ -116,7 +121,7 @@ function NotificationItem({
             size="sm"
             className={cn(
               "h-7 w-7 p-0 text-muted-foreground hover:text-destructive opacity-0 transition-opacity group-hover:opacity-100",
-              notification.is_read ? "ml-auto" : "ml-1.5"
+              notification.is_read ? "ms-auto" : "ms-1.5"
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -124,7 +129,7 @@ function NotificationItem({
             }}
           >
             <Trash2 className="size-3.5" />
-            <span className="sr-only">Clear notification</span>
+            <span className="sr-only">{t("clearNotification")}</span>
           </Button>
         </div>
       </div>
@@ -132,18 +137,23 @@ function NotificationItem({
   );
 }
 
-function formatRelativeTime(dateStr: string): string {
-  const now = new Date();
+function formatRelativeTime(dateStr: string, t: any, format: any): string {
   const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return "";
+
+  const now = new Date();
   const diffMs = now.getTime() - date.getTime();
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffHours < 1) return "Just now";
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays === 1) return "Yesterday";
-  if (diffDays < 7) return `${diffDays}d ago`;
-  return date.toLocaleDateString();
+  if (diffSecs < 60) return t("justNow");
+  if (diffMins < 60) return t("minsAgo", { count: diffMins });
+  if (diffHours < 24) return t("hoursAgo", { count: diffHours });
+  if (diffDays < 7) return t("daysAgo", { count: diffDays });
+
+  return format.dateTime(date, { month: "short", day: "numeric", year: "numeric" });
 }
 
 /** Swipeable wrapper for touch devices */
@@ -151,10 +161,14 @@ function SwipeableNotification({
   notification,
   onMarkRead,
   onClear,
+  t,
+  format,
 }: {
   notification: any;
   onMarkRead: (id: string) => void;
   onClear: (id: string) => void;
+  t: any;
+  format: any;
 }) {
   const [offset, setOffset] = useState(0);
   const [isSwiping, setIsSwiping] = useState(false);
@@ -206,7 +220,13 @@ function SwipeableNotification({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <NotificationItem notification={notification} onMarkRead={onMarkRead} onClear={onClear} />
+        <NotificationItem
+          notification={notification}
+          onMarkRead={onMarkRead}
+          onClear={onClear}
+          t={t}
+          format={format}
+        />
       </div>
     </div>
   );
@@ -223,6 +243,9 @@ export default function NotificationsPage() {
     clearAllNotifications,
   } = useNotificationsList(user?.id);
   const [tab, setTab] = useState("all");
+  const t = useTranslations("Notifications");
+  const commonT = useTranslations("Common");
+  const format = useFormatter();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -240,18 +263,18 @@ export default function NotificationsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <p suppressHydrationWarning className="text-muted-foreground">
             {unreadCount > 0
-              ? `You have ${unreadCount} unread notification${unreadCount > 1 ? "s" : ""}`
-              : "You're all caught up!"}
+              ? t("unreadCount", { unreadCount })
+              : t("allCaughtUp")}
           </p>
         </div>
         <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={markAllRead}>
-              <CheckCheck className="mr-2 size-4" />
-              Mark all as read
+              <CheckCheck className="me-2 size-4" />
+              {t("markAllRead")}
             </Button>
           )}
           {(notifications?.length || 0) > 0 && (
@@ -261,8 +284,8 @@ export default function NotificationsPage() {
               onClick={clearAllNotifications}
               className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 border-muted"
             >
-              <Trash2 className="mr-2 size-3.5" />
-              Clear all
+              <Trash2 className="me-2 size-3.5" />
+              {t("clearAll")}
             </Button>
           )}
         </div>
@@ -272,16 +295,16 @@ export default function NotificationsPage() {
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList>
             <TabsTrigger value="all">
-              All
-              <Badge variant="secondary" className="ml-1.5 text-[10px]">
+              {t("all")}
+              <Badge variant="secondary" className="ms-1.5 text-[10px]">
                 {notifications?.length || 0}
               </Badge>
             </TabsTrigger>
             <TabsTrigger value="unread">
-              Unread
-              {unreadCount > 0 && <Badge className="ml-1.5 text-[10px]">{unreadCount}</Badge>}
+              {t("unread")}
+              {unreadCount > 0 && <Badge className="ms-1.5 text-[10px]">{unreadCount}</Badge>}
             </TabsTrigger>
-            <TabsTrigger value="read">Read</TabsTrigger>
+            <TabsTrigger value="read">{t("read")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value={tab}>
@@ -291,12 +314,12 @@ export default function NotificationsPage() {
                   <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                     <Bell className="mb-4 size-12 text-muted-foreground/50" />
                     <h3 className="text-lg font-semibold">
-                      {tab === "unread" ? "No unread notifications" : "No notifications"}
+                      {tab === "unread" ? t("noUnread") : t("noNotifications")}
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       {tab === "unread"
-                        ? "You've read all your notifications!"
-                        : "Nothing here yet."}
+                        ? t("readAllCaughtUp")
+                        : t("nothingHere")}
                     </p>
                   </CardContent>
                 </Card>
@@ -307,6 +330,8 @@ export default function NotificationsPage() {
                     notification={notification}
                     onMarkRead={markAsRead}
                     onClear={clearNotification}
+                    t={t}
+                    format={format}
                   />
                 ))
               )}

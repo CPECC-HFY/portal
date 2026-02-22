@@ -124,6 +124,7 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-cairo: var(--font-cairo), "Cairo", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 

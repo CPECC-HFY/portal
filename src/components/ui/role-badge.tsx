@@ -81,16 +81,23 @@ interface RoleBadgeProps extends VariantProps<typeof badgeVariants> {
   className?: string;
 }
 
+import { useTranslations } from "next-intl";
+
 export function RoleBadge({ role, size = "sm", showIcon = true, className }: RoleBadgeProps) {
+  const t = useTranslations("Roles");
   const config = roleStyles[role as RoleName] ?? fallbackRole;
   const { Icon } = config;
   const resolvedSize = size ?? "sm";
   const isUppercase = resolvedSize === "xs" || resolvedSize === "sm";
 
+  const translatedRole = t(role.toLowerCase());
+
   return (
     <span className={cn(badgeVariants({ size }), config.badge, className)}>
       {showIcon && <Icon className={cn("shrink-0", iconSizeMap[resolvedSize])} />}
-      <span className="truncate leading-none">{isUppercase ? role.toUpperCase() : role}</span>
+      <span className="truncate leading-none">
+        {isUppercase ? translatedRole.toUpperCase() : translatedRole}
+      </span>
     </span>
   );
 }

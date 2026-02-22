@@ -83,7 +83,7 @@ export function IconPicker({ value, onChange }: IconPickerProps) {
             placeholder="Search icons..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9"
+            className="ps-9"
           />
         </div>
 

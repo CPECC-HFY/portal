@@ -1,12 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Cairo } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, getLocale } from "next-intl/server";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  variable: "--font-cairo",
 });
 
 export const viewport: Viewport = {
@@ -25,6 +33,11 @@ export const metadata: Metadata = {
   title: "Employee Portal",
   description: "Modern employee portal and announcement management system",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/icons/raseplogof.png",
+    shortcut: "/icons/raseplogof.png",
+    apple: "/icons/raseplogof.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -35,22 +48,36 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const dir = locale === "ar" ? "rtl" : "ltr";
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </ThemeProvider>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background antialiased",
+          inter.variable,
+          cairo.variable,
+          locale === "ar" ? "font-cairo" : "font-sans"
+        )}
+        suppressHydrationWarning
+      >
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

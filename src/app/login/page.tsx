@@ -9,9 +9,11 @@ import { Loader2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
   const router = useRouter();
+  const t = useTranslations("Auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export default function LoginPage() {
       setError(error.message);
     } else if (data.session) {
       // Log audit event (fire-and-forget, don't block login)
-      logAudit("Login", "System", `User logged in: ${email}`).catch(() => {});
+      logAudit("Login", "System", `User logged in: ${email}`).catch(() => { });
       // Once logged in, redirect to the dashboard
       router.push("/dashboard");
     }
@@ -42,7 +44,7 @@ export default function LoginPage() {
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       {/* Theme Toggle in top right */}
-      <div className="absolute right-4 top-4">
+      <div className="absolute end-4 top-4">
         <ThemeToggle />
       </div>
 
@@ -58,7 +60,7 @@ export default function LoginPage() {
             />
           </div>
           <h2 className="mt-8 text-center text-[26px] font-bold tracking-tight text-foreground">
-            Sign in to your account
+            {t("signInTitle")}
           </h2>
         </div>
 
@@ -72,7 +74,7 @@ export default function LoginPage() {
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email-address" className="sr-only">
-                Email address
+                {t("emailLabel")}
               </label>
               <input
                 id="email-address"
@@ -81,7 +83,7 @@ export default function LoginPage() {
                 autoComplete="email"
                 required
                 className="relative block w-full rounded-t-md border border-border bg-background py-3 px-3.5 text-foreground placeholder:text-muted-foreground focus:z-10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm sm:leading-6 transition-colors"
-                placeholder="Email address"
+                placeholder={t("emailLabel")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
@@ -89,7 +91,7 @@ export default function LoginPage() {
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                Password
+                {t("passwordLabel")}
               </label>
               <input
                 id="password"
@@ -98,7 +100,7 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 required
                 className="relative block w-full rounded-b-md border border-border bg-background py-3 px-3.5 text-foreground placeholder:text-muted-foreground focus:z-10 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm sm:leading-6 transition-colors"
-                placeholder="Password"
+                placeholder={t("passwordLabel")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isLoading}
@@ -116,9 +118,9 @@ export default function LoginPage() {
               />
               <label
                 htmlFor="remember-me"
-                className="ml-2 block text-sm text-foreground cursor-pointer"
+                className="ms-2 block text-sm text-foreground cursor-pointer"
               >
-                Remember me
+                {t("rememberMe")}
               </label>
             </div>
 
@@ -127,7 +129,7 @@ export default function LoginPage() {
                 href="#"
                 className="font-semibold text-primary hover:text-primary/80 transition-colors"
               >
-                Forgot password?
+                {t("forgotPassword")}
               </a>
             </div>
           </div>
@@ -138,8 +140,8 @@ export default function LoginPage() {
               disabled={isLoading}
               className="group relative flex w-full justify-center rounded-md bg-primary px-3 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
             >
-              {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin" />}
-              Sign in
+              {isLoading && <Loader2 className="me-2 h-5 w-5 animate-spin" />}
+              {t("signIn")}
             </button>
           </div>
         </form>

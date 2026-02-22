@@ -19,6 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAnalyticsData, useDashboardData } from "@/hooks/use-supabase";
+import { useTranslations } from "next-intl";
 import {
   BarChart,
   Bar,
@@ -87,19 +88,24 @@ export default function AnalyticsPage() {
   } = useAnalyticsData();
   const { stats: dashboardStats, loading: dashboardLoading } = useDashboardData();
 
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
+  const announcementsT = useTranslations("Announcements");
+  const navT = useTranslations("Navigation");
+
   if (analyticsLoading || dashboardLoading) {
     return (
       <div className="p-8 text-center text-muted-foreground animate-pulse flex items-center justify-center h-full">
-        Loading analytics...
+        {commonT("loading")}
       </div>
     );
   }
 
   const analyticsStats = [
     {
-      title: "Total Views",
+      title: t("totalViewsTitle"),
       value: analyticsData.reduce((sum, d) => sum + d.views, 0).toLocaleString(),
-      change: "Last 6 months",
+      change: t("last6Months"),
       trend: "up" as const,
       icon: Eye,
       color: "text-blue-500",
@@ -109,11 +115,11 @@ export default function AnalyticsPage() {
       sparkKey: "views" as const,
     },
     {
-      title: "Avg Engagement",
+      title: t("avgEngagement"),
       value: (
         analyticsData.reduce((sum, d) => sum + d.engagement, 0) / (analyticsData.length || 1)
       ).toFixed(1),
-      change: "Weighted Score",
+      change: t("weightedScore"),
       trend: "up" as const,
       icon: TrendingUp,
       color: "text-emerald-500",
@@ -123,9 +129,9 @@ export default function AnalyticsPage() {
       sparkKey: "engagement" as const,
     },
     {
-      title: "Active Users",
+      title: t("activeUsersCount"),
       value: dashboardStats.activeUsers,
-      change: "Real-time",
+      change: commonT("realTime"),
       trend: "up" as const,
       icon: Users,
       color: "text-purple-500",
@@ -135,9 +141,9 @@ export default function AnalyticsPage() {
       sparkKey: "users" as const,
     },
     {
-      title: "Announcements",
+      title: commonT("announcements"),
       value: dashboardStats.totalAnnouncements,
-      change: "All time",
+      change: commonT("allTime"),
       trend: "up" as const,
       icon: Megaphone,
       color: "text-amber-500",
@@ -151,8 +157,8 @@ export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">Usage data, engagement metrics, and insights.</p>
+        <h1 className="text-2xl font-bold tracking-tight">{navT("analytics")}</h1>
+        <p className="text-muted-foreground">{t("analyticsDesc")}</p>
       </div>
 
       {/* Stats */}
@@ -227,8 +233,8 @@ export default function AnalyticsPage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Views & Engagement</CardTitle>
-            <CardDescription>Monthly trends over the last 6 months</CardDescription>
+            <CardTitle>{t("viewsAndEngagement")}</CardTitle>
+            <CardDescription>{t("monthlyTrends")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
@@ -282,8 +288,8 @@ export default function AnalyticsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Announcements Published</CardTitle>
-            <CardDescription>Number of announcements per month</CardDescription>
+            <CardTitle>{t("announcementsPublished")}</CardTitle>
+            <CardDescription>{t("announcementsPerMonth")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
@@ -315,18 +321,18 @@ export default function AnalyticsPage() {
       {/* Top Announcements Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Top Performing Announcements</CardTitle>
-          <CardDescription>Ranked by total views</CardDescription>
+          <CardTitle>{t("topPerformingAnnouncements")}</CardTitle>
+          <CardDescription>{t("rankedByViews")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Views</TableHead>
-                <TableHead className="text-right">Engagement</TableHead>
+                <TableHead>{commonT("title")}</TableHead>
+                <TableHead>{commonT("category")}</TableHead>
+                <TableHead className="text-end">{announcementsT("views")}</TableHead>
+                <TableHead className="text-end">{commonT("engagement")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -346,20 +352,23 @@ export default function AnalyticsPage() {
                         <span className="truncate">{ann.category}</span>
                       </span>
                     </TableCell>
-                    <TableCell className="text-right tabular-nums text-muted-foreground">
+                    <TableCell className="text-end tabular-nums text-muted-foreground">
                       {ann.views.toLocaleString()}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-end">
                       <span
-                        className={`inline-flex min-w-[70px] justify-center items-center rounded-full px-2 py-0.5 text-[11px] font-medium border shadow-[0_0_8px_rgba(0,0,0,0.05)] ${
-                          ann.engagement === "High"
-                            ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
-                            : ann.engagement === "Medium"
-                              ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
-                              : "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20"
-                        }`}
+                        className={`inline-flex min-w-[70px] justify-center items-center rounded-full px-2 py-0.5 text-[11px] font-medium border shadow-[0_0_8px_rgba(0,0,0,0.05)] ${ann.engagement === "High"
+                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20"
+                          : ann.engagement === "Medium"
+                            ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+                            : "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20"
+                          }`}
                       >
-                        {ann.engagement}
+                        {ann.engagement === "High"
+                          ? commonT("high")
+                          : ann.engagement === "Medium"
+                            ? commonT("medium")
+                            : commonT("low")}
                       </span>
                     </TableCell>
                   </TableRow>

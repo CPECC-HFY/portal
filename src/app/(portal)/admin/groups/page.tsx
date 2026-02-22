@@ -19,10 +19,15 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGroups, useUsersList } from "@/hooks/use-supabase";
 import { updateGroupMembers, createGroup, deleteGroup } from "@/app/actions/group-actions";
+import { useTranslations } from "next-intl";
 
 export default function ManageGroupsPage() {
   const { groups, loading: groupsLoading, refresh: refreshGroups } = useGroups();
   const { data: users, loading: usersLoading } = useUsersList();
+
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
+  const groupsT = useTranslations("Groups");
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
@@ -52,7 +57,7 @@ export default function ManageGroupsPage() {
   };
 
   const handleDeleteGroup = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this group?")) return;
+    if (!confirm(t("deleteGroupConfirm"))) return;
     try {
       await deleteGroup(id);
       refreshGroups();
@@ -98,15 +103,15 @@ export default function ManageGroupsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-            Targeted Groups
+            {t("targetedGroups")}
           </h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            Organize users for targeted announcement broadcasts.
+            {t("targetedGroupsDesc")}
           </p>
         </div>
         <Button onClick={() => setIsCreateOpen(true)} className="gap-2 shadow-lg shadow-primary/20">
           <Plus className="size-4" />
-          Create New Group
+          {t("createNewGroup")}
         </Button>
       </div>
 
@@ -118,10 +123,9 @@ export default function ManageGroupsPage() {
         ) : groups.length === 0 ? (
           <div className="col-span-full py-20 text-center bg-muted/20 rounded-2xl border-2 border-dashed border-border/50">
             <Users className="size-12 mx-auto text-muted-foreground/30 mb-4" />
-            <h3 className="text-lg font-bold">No groups found</h3>
+            <h3 className="text-lg font-bold">{t("noGroupsFoundTitle")}</h3>
             <p className="text-muted-foreground text-sm max-w-xs mx-auto mt-2">
-              Create groups to start sending targeted announcements to specific teams or
-              departments.
+              {t("noGroupsFoundDesc")}
             </p>
           </div>
         ) : (
@@ -156,7 +160,7 @@ export default function ManageGroupsPage() {
               <CardContent className="pt-4 flex items-center justify-between">
                 <Badge variant="secondary" className="gap-1.5 font-medium px-2.5 py-0.5">
                   <Users className="size-3.5" />
-                  {group.members.length} Members
+                  {t("membersCount", { count: group.members.length })}
                 </Badge>
                 <Button
                   variant="outline"
@@ -164,7 +168,7 @@ export default function ManageGroupsPage() {
                   className="gap-2 group-hover:bg-primary group-hover:text-primary-foreground transition-all"
                   onClick={() => handleOpenMembers(group)}
                 >
-                  Manage Members
+                  {t("manageMembers")}
                 </Button>
               </CardContent>
             </Card>
@@ -176,24 +180,24 @@ export default function ManageGroupsPage() {
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create Targeted Group</DialogTitle>
+            <DialogTitle>{t("createTargetedGroup")}</DialogTitle>
             <DialogDescription>
-              Create a group to send announcements only to specific users or teams.
+              {t("createTargetedGroupDesc")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Group Name</label>
+              <label className="text-sm font-medium">{t("groupName")}</label>
               <Input
-                placeholder="e.g., HR Department"
+                placeholder={t("groupNamePlaceholder")}
                 value={newGroupName}
                 onChange={(e) => setNewGroupName(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description (Optional)</label>
+              <label className="text-sm font-medium">{commonT("description")} ({commonT("optional")})</label>
               <Input
-                placeholder="Briefly describe the target audience..."
+                placeholder={t("groupDescPlaceholder")}
                 value={newGroupDesc}
                 onChange={(e) => setNewGroupDesc(e.target.value)}
               />
@@ -201,11 +205,11 @@ export default function ManageGroupsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsCreateOpen(false)}>
-              Cancel
+              {commonT("cancel")}
             </Button>
             <Button onClick={handleCreateGroup} disabled={isCreating || !newGroupName.trim()}>
-              {isCreating ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-              Create Group
+              {isCreating ? <Loader2 className="size-4 animate-spin me-2" /> : null}
+              {t("createGroup")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -217,19 +221,19 @@ export default function ManageGroupsPage() {
           <DialogHeader className="p-6 pb-0">
             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
               <Users className="size-6 text-primary" />
-              Manage Members
+              {t("manageMembers")}
             </DialogTitle>
             <DialogDescription className="text-sm font-medium">
-              Group: <span className="text-foreground font-bold">{selectedGroup?.name}</span>
+              {t("group")}: <span className="text-foreground font-bold">{selectedGroup?.name}</span>
             </DialogDescription>
           </DialogHeader>
 
           <div className="px-6 py-4 border-b bg-muted/20">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
-                placeholder="Search users by name or email..."
-                className="pl-9 bg-background"
+                placeholder={t("searchUsersPlaceholder")}
+                className="ps-9 bg-background"
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
               />
@@ -246,20 +250,18 @@ export default function ManageGroupsPage() {
                 filteredUsers?.map((user) => (
                   <div
                     key={user.id}
-                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${
-                      selectedUserIds.includes(user.id)
-                        ? "bg-primary/5 border border-primary/20"
-                        : "hover:bg-muted/50 border border-transparent"
-                    }`}
+                    className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${selectedUserIds.includes(user.id)
+                      ? "bg-primary/5 border border-primary/20"
+                      : "hover:bg-muted/50 border border-transparent"
+                      }`}
                     onClick={() => toggleUser(user.id)}
                   >
                     <div className="flex items-center gap-3">
                       <div
-                        className={`size-8 rounded-full flex items-center justify-center text-xs font-bold ${
-                          selectedUserIds.includes(user.id)
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground"
-                        }`}
+                        className={`size-8 rounded-full flex items-center justify-center text-xs font-bold ${selectedUserIds.includes(user.id)
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted text-muted-foreground"
+                          }`}
                       >
                         {user.name.substring(0, 2).toUpperCase()}
                       </div>
@@ -283,16 +285,15 @@ export default function ManageGroupsPage() {
 
           <div className="p-6 bg-muted/30 border-t flex flex-wrap gap-2 items-center justify-between">
             <div className="text-xs text-muted-foreground">
-              <span className="font-bold text-foreground">{selectedUserIds.length}</span> users
-              selected
+              {t("usersSelected", { count: selectedUserIds.length })}
             </div>
             <div className="flex gap-2">
               <Button variant="ghost" size="sm" onClick={() => setIsMembersOpen(false)}>
-                Cancel
+                {commonT("cancel")}
               </Button>
               <Button size="sm" onClick={handleSaveMembers} disabled={isSavingMembers}>
-                {isSavingMembers ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-                Save Changes
+                {isSavingMembers ? <Loader2 className="size-4 animate-spin me-2" /> : null}
+                {commonT("saveChanges")}
               </Button>
             </div>
           </div>

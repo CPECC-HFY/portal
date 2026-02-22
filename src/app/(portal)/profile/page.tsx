@@ -16,11 +16,14 @@ import { useUser, useUserProfile } from "@/hooks/use-supabase";
 import { supabase } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ProfilePage() {
   const { user, loading: userLoading } = useUser();
   const { profile, loading: profileLoading } = useUserProfile(user?.id);
   const [editing, setEditing] = useState(false);
+  const t = useTranslations("Profile");
+  const commonT = useTranslations("Common");
 
   const {
     register,
@@ -44,8 +47,8 @@ export default function ProfilePage() {
         name: profile.name || "",
         email: profile.email || "",
         phone: profile.phone || "",
-        location: "", // Add location to DB if needed
-        bio: "", // Add bio to DB if needed
+        location: (profile as any).location || "",
+        bio: (profile as any).bio || "",
       });
     }
   }, [profile, reset]);
@@ -53,13 +56,13 @@ export default function ProfilePage() {
   if (userLoading || (profileLoading && !profile)) {
     return (
       <div className="p-8 text-center text-muted-foreground animate-pulse flex items-center justify-center h-full">
-        Loading live profile...
+        {t("loadingProfile")}
       </div>
     );
   }
 
   if (!profile) {
-    return <div className="p-8 text-center text-muted-foreground">Profile not found.</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t("profileNotFound")}</div>;
   }
 
   const onSubmit = async (data: ProfileFormValues) => {
@@ -67,9 +70,12 @@ export default function ProfilePage() {
     const { error } = await supabase
       .from("users")
       .update({
-        name: data.name,
+        email: data.email,
         phone: data.phone,
-      })
+        location: data.location,
+        bio: data.bio,
+        updated_at: new Date().toISOString(),
+      } as any)
       .eq("id", user.id);
 
     if (!error) {
@@ -86,8 +92,8 @@ export default function ProfilePage() {
       name: profile?.name || "",
       email: profile?.email || "",
       phone: profile?.phone || "",
-      location: "",
-      bio: "",
+      location: (profile as any)?.location || "",
+      bio: (profile as any)?.bio || "",
     });
     setEditing(false);
   };
@@ -99,8 +105,8 @@ export default function ProfilePage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">My Profile</h1>
-        <p className="text-muted-foreground">View and manage your personal information.</p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground">{t("subHeader")}</p>
       </div>
 
       {/* Profile Header */}
@@ -110,16 +116,16 @@ export default function ProfilePage() {
             <div className="flex size-24 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-foreground ring-4 ring-primary/20">
               {userInitials}
             </div>
-            <div className="flex-1 text-center sm:text-left">
+            <div className="flex-1 text-center sm:text-start">
               <h2 className="text-2xl font-bold">{profile.name}</h2>
               <p className="text-muted-foreground">{profile.role}</p>
               <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
                 <Badge variant="secondary">
-                  <Building2 className="mr-1 size-3" />
-                  {profile.department || "General"}
+                  <Building2 className="me-1 size-3" />
+                  {profile.department || commonT("unknown")}
                 </Badge>
                 <Badge variant="outline">
-                  <Shield className="mr-1 size-3" />
+                  <Shield className="me-1 size-3" />
                   {profile.role}
                 </Badge>
                 <Badge
@@ -140,13 +146,13 @@ export default function ProfilePage() {
             >
               {editing ? (
                 <>
-                  <X className="mr-2 size-4" />
-                  Cancel
+                  <X className="me-2 size-4" />
+                  {commonT("cancel")}
                 </>
               ) : (
                 <>
-                  <Edit2 className="mr-2 size-4" />
-                  Edit Profile
+                  <Edit2 className="me-2 size-4" />
+                  {t("editProfile")}
                 </>
               )}
             </Button>
@@ -159,12 +165,12 @@ export default function ProfilePage() {
           {/* Contact Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-              <CardDescription>Your contact details and location</CardDescription>
+              <CardTitle>{t("contactInfo")}</CardTitle>
+              <CardDescription>{t("contactInfoDesc")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{commonT("email")}</Label>
                 {editing ? (
                   <div>
                     <Input id="email" {...register("email")} aria-invalid={!!errors.email} />
@@ -180,7 +186,7 @@ export default function ProfilePage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">{commonT("phone")}</Label>
                 {editing ? (
                   <div>
                     <Input id="phone" {...register("phone")} aria-invalid={!!errors.phone} />
@@ -191,12 +197,12 @@ export default function ProfilePage() {
                 ) : (
                   <p className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Phone className="size-4" />
-                    {profile.phone || "Not set"}
+                    {profile.phone || commonT("unknown")}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="location">Location</Label>
+                <Label htmlFor="location">{commonT("location")}</Label>
                 {editing ? (
                   <div>
                     <Input
@@ -211,7 +217,7 @@ export default function ProfilePage() {
                 ) : (
                   <p className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin className="size-4" />
-                    {(profile as any).location || "Not set"}
+                    {(profile as any).location || commonT("unknown")}
                   </p>
                 )}
               </div>
@@ -221,25 +227,25 @@ export default function ProfilePage() {
           {/* Employee Details (Read Only) */}
           <Card>
             <CardHeader>
-              <CardTitle>Employee Details</CardTitle>
-              <CardDescription>Official company records</CardDescription>
+              <CardTitle>{t("employeeDetails")}</CardTitle>
+              <CardDescription>{t("employeeDetailsDesc")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">Department</Label>
-                  <p className="text-sm font-medium">{profile.department || "General"}</p>
+                  <Label className="text-xs text-muted-foreground">{commonT("department")}</Label>
+                  <p className="text-sm font-medium">{profile.department || commonT("unknown")}</p>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">Role</Label>
+                  <Label className="text-xs text-muted-foreground">{commonT("role")}</Label>
                   <p className="text-sm font-medium">{profile.role}</p>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">Status</Label>
+                  <Label className="text-xs text-muted-foreground">{commonT("status")}</Label>
                   <p className="text-sm font-medium">{profile.status}</p>
                 </div>
                 <div className="space-y-1">
-                  <Label className="text-xs text-muted-foreground">Join Date</Label>
+                  <Label className="text-xs text-muted-foreground">{commonT("joinDate")}</Label>
                   <p className="text-sm font-medium flex items-center gap-1.5">
                     <Calendar className="size-3 text-muted-foreground" />
                     {new Date(profile.join_date || "").toLocaleDateString()}
@@ -253,14 +259,14 @@ export default function ProfilePage() {
         {/* Bio (Full Width) */}
         <Card className="mt-6 md:col-span-2">
           <CardHeader>
-            <CardTitle>About Me</CardTitle>
+            <CardTitle>{t("aboutMe")}</CardTitle>
           </CardHeader>
           <CardContent>
             {editing ? (
               <div className="space-y-2">
                 <textarea
                   className="flex min-h-[120px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Write a short bio..."
+                  placeholder={t("bioPlaceholder")}
                   {...register("bio")}
                   aria-invalid={!!errors.bio}
                 />
@@ -268,7 +274,7 @@ export default function ProfilePage() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {(profile as any).bio || "No bio added yet."}
+                {(profile as any).bio || t("noBio")}
               </p>
             )}
           </CardContent>
@@ -277,8 +283,8 @@ export default function ProfilePage() {
         {editing && (
           <div className="mt-6 flex justify-end">
             <Button type="submit" disabled={isSubmitting}>
-              <Save className="mr-2 size-4" />
-              {isSubmitting ? "Saving..." : "Save Changes"}
+              <Save className="me-2 size-4" />
+              {isSubmitting ? commonT("saving") : t("saveChanges")}
             </Button>
           </div>
         )}

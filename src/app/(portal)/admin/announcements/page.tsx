@@ -74,6 +74,7 @@ import { useAnnouncementsList, useUsersList, useUser, useGroups } from "@/hooks/
 import { useAnnouncementCategories } from "@/hooks/use-announcement-categories";
 import { supabase } from "@/lib/supabase";
 import { logAudit } from "@/lib/audit";
+import { useTranslations, useFormatter } from "next-intl";
 import {
   notifyAllUsers,
   notifyMentions,
@@ -85,13 +86,13 @@ import { Separator } from "@/components/ui/separator";
 import { CategoryManager } from "@/components/announcements/category-manager";
 import { cn, stripHtml } from "@/lib/utils";
 
-function getDate(ann: any): string {
+function getDate(ann: any, format: any): string {
   const raw = ann.published_at || ann.publishedAt || ann.created_at;
   if (!raw) return "";
   const d = new Date(raw);
   return isNaN(d.getTime())
     ? ""
-    : d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    : format.dateTime(d, { month: "short", day: "numeric" });
 }
 
 const priorityConfig: Record<
@@ -150,6 +151,23 @@ export default function ManageAnnouncementsPage() {
   const { user } = useUser();
   const { groups } = useGroups();
   const { categories, loading: categoriesLoading } = useAnnouncementCategories();
+
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
+  const announcementsT = useTranslations("Announcements");
+  const rolesT = useTranslations("Roles");
+  const format = useFormatter();
+
+  // Helper to translate safely with fallback to raw value
+  const safeTranslateAnn = (key: string, raw: string) => {
+    const k = key.toLowerCase();
+    return announcementsT.has(k) ? announcementsT(k) : raw;
+  };
+
+  const safeTranslateCommon = (key: string, raw: string) => {
+    const k = key.toLowerCase();
+    return commonT.has(k) ? commonT(k) : raw;
+  };
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -255,14 +273,14 @@ export default function ManageAnnouncementsPage() {
       await logAudit(
         "Create",
         "Announcement",
-        `${status === "Published" ? "Published" : "Drafted"}: ${formTitle}`
+        `${status === "Published" ? commonT("published") : commonT("drafts")}: ${formTitle}`
       );
 
       // 2. Notifications (Only if Published)
       if (formTargetType === "All") {
         // Broadcast to all users
         await notifyAllUsers(
-          `New Announcement: ${formTitle}`,
+          announcementsT("newAnnouncementTitle", { title: formTitle }),
           formContent.substring(0, 50) + "...",
           "/announcements"
         );
@@ -270,7 +288,7 @@ export default function ManageAnnouncementsPage() {
         // Notify specific groups
         await notifyTargetedGroups(
           formTargetGroups,
-          `New Group Announcement: ${formTitle}`,
+          announcementsT("newGroupAnnouncementTitle", { title: formTitle }),
           formContent.substring(0, 50) + "...",
           "/announcements"
         );
@@ -279,7 +297,7 @@ export default function ManageAnnouncementsPage() {
       // Specific mentions notification (if any)
       await notifyMentions(
         formContent,
-        `You were mentioned in an announcement`,
+        announcementsT("mentionTitle"),
         formTitle,
         "/announcements"
       );
@@ -384,7 +402,7 @@ export default function ManageAnnouncementsPage() {
       if (attachError) console.error("Error updating attachments:", attachError);
     }
 
-    await logAudit("Update", "Announcement", `Edited: ${editTitle}`);
+    await logAudit("Update", "Announcement", announcementsT("editedLog", { title: editTitle }));
     setEditDialogOpen(false);
     setEditAnn(null);
     setEditSaving(false);
@@ -394,7 +412,7 @@ export default function ManageAnnouncementsPage() {
   const handleArchive = async (ann: any) => {
     const { error } = await supabase.rpc("archive_announcement", { p_announcement_id: ann.id });
     if (!error) {
-      await logAudit("Update", "Announcement", `Archived: ${ann.title}`);
+      await logAudit("Update", "Announcement", announcementsT("archivedLog", { title: ann.title }));
     } else {
       console.error("Failed to archive:", error);
     }
@@ -403,12 +421,12 @@ export default function ManageAnnouncementsPage() {
   // â”€â”€ Delete handler â”€â”€
   const handleDelete = async (ann: any) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${ann.title}"? This action cannot be undone.`
+      t("deleteAnnouncementConfirm", { title: ann.title })
     );
     if (!confirmed) return;
     const { error } = await supabase.from("announcements").delete().eq("id", ann.id);
     if (!error) {
-      await logAudit("Delete", "Announcement", `Deleted: ${ann.title}`);
+      await logAudit("Delete", "Announcement", announcementsT("deletedLog", { title: ann.title }));
     } else {
       console.error("Failed to delete:", error);
     }
@@ -418,7 +436,7 @@ export default function ManageAnnouncementsPage() {
     () => [
       {
         accessorKey: "title",
-        header: "Title",
+        header: commonT("title"),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             {row.original.pinned && <Pin className="size-3 rotate-45 text-primary" />}
@@ -428,19 +446,19 @@ export default function ManageAnnouncementsPage() {
       },
       {
         accessorKey: "author",
-        header: "Author",
+        header: announcementsT("author"),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 text-primary">
               <UserIcon className="size-3.5 opacity-80" />
             </div>
-            <span className="text-sm">{row.original.author?.name || "Unknown"}</span>
+            <span className="text-sm">{row.original.author?.name || commonT("unknown")}</span>
           </div>
         ),
       },
       {
         accessorKey: "category",
-        header: "Category",
+        header: commonT("category"),
         cell: ({ row }) => {
           const cat = categories.find((c) => c.name === row.original.category);
           const bg = cat
@@ -453,14 +471,14 @@ export default function ManageAnnouncementsPage() {
               className={`inline-flex w-[100px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${bg}`}
             >
               <DynamicCategoryIcon icon={iconValue} className="size-3" />
-              <span className="truncate">{row.original.category}</span>
+              <span className="truncate">{safeTranslateAnn(row.original.category, row.original.category)}</span>
             </span>
           );
         },
       },
       {
         accessorKey: "priority",
-        header: "Priority",
+        header: commonT("priority"),
         cell: ({ row }) => {
           const pCfg = priorityConfig[row.original.priority] || priorityConfig.Low;
           return (
@@ -475,14 +493,14 @@ export default function ManageAnnouncementsPage() {
                   className={`relative inline-flex size-1.5 rounded-full ${pCfg.innerDot}`}
                 ></span>
               </span>
-              <span className="truncate">{row.original.priority}</span>
+              <span className="truncate">{safeTranslateCommon(row.original.priority, row.original.priority)}</span>
             </span>
           );
         },
       },
       {
         accessorKey: "status",
-        header: "Status",
+        header: commonT("status"),
         cell: ({ row }) => {
           const sCfg =
             announcementStatusConfig[row.original.status] || announcementStatusConfig.Archived;
@@ -490,14 +508,14 @@ export default function ManageAnnouncementsPage() {
             <span
               className={`inline-flex w-[100px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${sCfg}`}
             >
-              <span className="truncate">{row.original.status}</span>
+              <span className="truncate">{safeTranslateCommon(row.original.status, row.original.status)}</span>
             </span>
           );
         },
       },
       {
         accessorKey: "views",
-        header: "Views",
+        header: announcementsT("views"),
         cell: ({ row }) => (
           <span className="flex items-center gap-1 text-sm text-muted-foreground">
             <Eye className="size-3" />
@@ -507,8 +525,8 @@ export default function ManageAnnouncementsPage() {
       },
       {
         accessorKey: "publishedAt",
-        header: "Date",
-        cell: ({ row }) => getDate(row.original),
+        header: commonT("date"),
+        cell: ({ row }) => getDate(row.original, format),
       },
       {
         id: "actions",
@@ -522,24 +540,24 @@ export default function ManageAnnouncementsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => handleEditOpen(row.original)}>
-                <Edit className="mr-2 size-4" />
-                Edit
+                <Edit className="me-2 size-4" />
+                {commonT("edit")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setPreviewAnn(row.original)}>
-                <Eye className="mr-2 size-4" />
-                Preview
+                <Eye className="me-2 size-4" />
+                {announcementsT("preview")}
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleArchive(row.original)}>
-                <Archive className="mr-2 size-4" />
-                Archive
+                <Archive className="me-2 size-4" />
+                {commonT("archive")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={() => handleDelete(row.original)}
               >
-                <Trash2 className="mr-2 size-4" />
-                Delete
+                <Trash2 className="me-2 size-4" />
+                {commonT("delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -564,7 +582,7 @@ export default function ManageAnnouncementsPage() {
 
   const statsData = [
     {
-      title: "Total Announcements",
+      title: t("totalAnnouncements"),
       value: data.length,
       icon: Megaphone,
       color: "text-blue-500",
@@ -573,7 +591,7 @@ export default function ManageAnnouncementsPage() {
       gradientTo: "to-blue-500/5",
     },
     {
-      title: "Published",
+      title: commonT("published"),
       value: data.filter((a) => a.status === "Published").length,
       icon: CheckCircle2,
       color: "text-emerald-500",
@@ -582,7 +600,7 @@ export default function ManageAnnouncementsPage() {
       gradientTo: "to-emerald-500/5",
     },
     {
-      title: "Drafts",
+      title: commonT("drafts"),
       value: data.filter((a) => a.status === "Draft").length,
       icon: FileEdit,
       color: "text-amber-500",
@@ -591,8 +609,8 @@ export default function ManageAnnouncementsPage() {
       gradientTo: "to-amber-500/5",
     },
     {
-      title: "Total Views",
-      value: data.reduce((sum, a) => sum + a.views, 0).toLocaleString(),
+      title: t("totalViewsCount"),
+      value: data.reduce((sum, a) => sum + a.views, 0).toLocaleString(undefined),
       icon: Eye,
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
@@ -605,12 +623,12 @@ export default function ManageAnnouncementsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Manage Announcements</h1>
-          <p className="text-muted-foreground">Create, edit, and manage all announcements.</p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("manageAnnouncements")}</h1>
+          <p className="text-muted-foreground">{t("manageAnnouncementsDesc")}</p>
         </div>
         <Button onClick={() => setDialogOpen(true)} className="w-full sm:w-auto">
-          <Plus className="mr-2 size-4" />
-          New Announcement
+          <Plus className="me-2 size-4" />
+          {t("newAnnouncement")}
         </Button>
       </div>
 
@@ -642,18 +660,18 @@ export default function ManageAnnouncementsPage() {
       <Card>
         <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pb-4">
           <div>
-            <CardTitle>All Announcements</CardTitle>
+            <CardTitle>{t("allAnnouncements")}</CardTitle>
             <CardDescription>
-              {table.getFilteredRowModel().rows.length} announcement(s)
+              {t("announcementsCount", { count: table.getFilteredRowModel().rows.length })}
             </CardDescription>
           </div>
           <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search announcements..."
+              placeholder={t("searchAnnouncements")}
               value={globalFilter}
               onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-9"
+              className="ps-9"
             />
           </div>
         </CardHeader>
@@ -677,7 +695,7 @@ export default function ManageAnnouncementsPage() {
                 {loading && !data.length ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center animate-pulse">
-                      Loading live announcements...
+                      {t("loadingAnnouncements")}
                     </TableCell>
                   </TableRow>
                 ) : table.getRowModel().rows.length ? (
@@ -693,7 +711,7 @@ export default function ManageAnnouncementsPage() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No results found.
+                      {commonT("noResults")}
                     </TableCell>
                   </TableRow>
                 )}
@@ -703,7 +721,7 @@ export default function ManageAnnouncementsPage() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
             <p className="text-sm text-muted-foreground">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {commonT("page")} {table.getState().pagination.pageIndex + 1} {commonT("of")} {table.getPageCount()}
             </p>
             <div className="flex gap-2">
               <Button
@@ -713,8 +731,8 @@ export default function ManageAnnouncementsPage() {
                 disabled={!table.getCanPreviousPage()}
                 className="flex-1 sm:flex-none"
               >
-                <ChevronLeft className="mr-1 size-4" />
-                Previous
+                <ChevronLeft className="me-1 size-4" />
+                {commonT("previous")}
               </Button>
               <Button
                 variant="outline"
@@ -723,8 +741,8 @@ export default function ManageAnnouncementsPage() {
                 disabled={!table.getCanNextPage()}
                 className="flex-1 sm:flex-none"
               >
-                Next
-                <ChevronRight className="ml-1 size-4" />
+                {commonT("next")}
+                <ChevronRight className="ms-1 size-4" />
               </Button>
             </div>
           </div>
@@ -740,10 +758,10 @@ export default function ManageAnnouncementsPage() {
                 <span className="bg-primary/20 p-2 rounded-lg text-primary">
                   <Megaphone className="size-5" />
                 </span>
-                Create New Announcement
+                {t("createNewAnnouncement")}
               </DialogTitle>
               <DialogDescription className="pt-2 text-sm">
-                Compose a new message to broadcast across the employee portal.
+                {t("createNewAnnouncementDesc")}
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -755,13 +773,13 @@ export default function ManageAnnouncementsPage() {
                   htmlFor="title"
                   className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                 >
-                  Title
+                  {commonT("title")}
                 </Label>
                 <Input
                   id="title"
                   value={formTitle}
                   onChange={(e) => setFormTitle(e.target.value)}
-                  placeholder="E.g., Quarterly All-Hands Meeting"
+                  placeholder={announcementsT("titlePlaceholder")}
                   className="text-lg font-medium border-muted-foreground/20 focus-visible:ring-primary/50"
                 />
               </div>
@@ -772,7 +790,7 @@ export default function ManageAnnouncementsPage() {
                     htmlFor="category"
                     className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                   >
-                    Category
+                    {commonT("category")}
                   </Label>
                   <div className="flex gap-2">
                     <select
@@ -783,7 +801,7 @@ export default function ManageAnnouncementsPage() {
                     >
                       {categories.map((cat) => (
                         <option key={cat.id} value={cat.name}>
-                          {cat.name}
+                          {safeTranslateAnn(cat.name, cat.name)}
                         </option>
                       ))}
                     </select>
@@ -793,7 +811,7 @@ export default function ManageAnnouncementsPage() {
                       size="icon"
                       className="shrink-0"
                       onClick={() => setCategoryManagerOpen(true)}
-                      title="Manage Categories"
+                      title={t("manageCategories")}
                     >
                       <PlusCircle className="size-4" />
                     </Button>
@@ -804,7 +822,7 @@ export default function ManageAnnouncementsPage() {
                     htmlFor="priority"
                     className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                   >
-                    Priority
+                    {commonT("priority")}
                   </Label>
                   <select
                     id="priority"
@@ -812,10 +830,10 @@ export default function ManageAnnouncementsPage() {
                     onChange={(e) => setFormPriority(e.target.value)}
                     className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                    <option value="Urgent">Urgent</option>
+                    <option value="Low">{commonT("low")}</option>
+                    <option value="Medium">{commonT("medium")}</option>
+                    <option value="High">{commonT("high")}</option>
+                    <option value="Urgent">{commonT("urgent")}</option>
                   </select>
                 </div>
               </div>
@@ -825,12 +843,12 @@ export default function ManageAnnouncementsPage() {
                   htmlFor="content"
                   className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                 >
-                  Full Content
+                  {announcementsT("fullContent")}
                 </Label>
                 <RichTextEditor
                   content={formContent}
                   onChange={setFormContent}
-                  placeholder="Write the full details of your announcement here..."
+                  placeholder={announcementsT("contentPlaceholder")}
                 />
               </div>
 
@@ -839,7 +857,7 @@ export default function ManageAnnouncementsPage() {
               <div className="grid gap-4 p-4 rounded-lg border border-border/50 bg-muted/10">
                 <div className="space-y-1">
                   <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                    Target Audience
+                    {t("targetAudience")}
                   </Label>
                   <div className="flex gap-4 pt-1">
                     <label className="flex items-center gap-2 cursor-pointer group">
@@ -851,7 +869,7 @@ export default function ManageAnnouncementsPage() {
                         className="accent-primary size-4"
                       />
                       <span className="text-sm font-medium group-hover:text-primary transition-colors">
-                        All Users
+                        {t("allUsers")}
                       </span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer group">
@@ -863,7 +881,7 @@ export default function ManageAnnouncementsPage() {
                         className="accent-primary size-4"
                       />
                       <span className="text-sm font-medium group-hover:text-primary transition-colors">
-                        Specific Groups
+                        {t("specificGroups")}
                       </span>
                     </label>
                   </div>
@@ -872,7 +890,7 @@ export default function ManageAnnouncementsPage() {
                 {formTargetType === "Groups" && (
                   <div className="space-y-2 animate-in slide-in-from-top-2 duration-300">
                     <Label className="text-xs text-muted-foreground font-medium">
-                      Select Groups
+                      {t("selectGroups")}
                     </Label>
                     <div className="flex flex-wrap gap-2">
                       {groups.map((group) => (
@@ -893,7 +911,7 @@ export default function ManageAnnouncementsPage() {
                       ))}
                       {groups.length === 0 && (
                         <p className="text-xs text-destructive italic">
-                          No groups found. Create groups first.
+                          {t("noGroupsFound")}
                         </p>
                       )}
                     </div>
@@ -903,9 +921,9 @@ export default function ManageAnnouncementsPage() {
 
               <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 p-4">
                 <div className="space-y-0.5">
-                  <Label className="text-base font-medium">Pin to Dashboard</Label>
+                  <Label className="text-base font-medium">{announcementsT("pinToDashboard")}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Keep this announcement pinned to the top of the feed.
+                    {announcementsT("pinDesc")}
                   </p>
                 </div>
                 <Switch checked={formPinned} onCheckedChange={setFormPinned} />
@@ -919,14 +937,14 @@ export default function ManageAnnouncementsPage() {
               onClick={() => setDialogOpen(false)}
               className="text-muted-foreground"
             >
-              Cancel
+              {commonT("cancel")}
             </Button>
             <div className="flex gap-3">
               <Button variant="outline" onClick={() => handlePublish("Draft")}>
-                Save Draft
+                {commonT("saveDraft")}
               </Button>
               <Button onClick={() => handlePublish("Published")} className="gap-2">
-                <CheckCircle2 className="size-4" /> Publish Now
+                <CheckCircle2 className="size-4" /> {commonT("publishNow")}
               </Button>
             </div>
           </div>
@@ -948,10 +966,10 @@ export default function ManageAnnouncementsPage() {
                 <span className="bg-blue-500/20 p-2 rounded-lg text-blue-500">
                   <Edit className="size-5" />
                 </span>
-                Edit Announcement
+                {commonT("editAnnouncement")}
               </DialogTitle>
               <DialogDescription className="pt-2 text-sm">
-                Update the announcement details. Changes are saved to the database.
+                {t("editAnnouncementDesc")}
               </DialogDescription>
             </DialogHeader>
           </div>
@@ -961,7 +979,7 @@ export default function ManageAnnouncementsPage() {
                 htmlFor="edit-title"
                 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
               >
-                Title
+                {commonT("title")}
               </Label>
               <Input
                 id="edit-title"
@@ -976,7 +994,7 @@ export default function ManageAnnouncementsPage() {
                   htmlFor="edit-category"
                   className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                 >
-                  Category
+                  {commonT("category")}
                 </Label>
                 <select
                   id="edit-category"
@@ -984,12 +1002,11 @@ export default function ManageAnnouncementsPage() {
                   onChange={(e) => setEditCategory(e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 >
-                  <option value="General">General</option>
-                  <option value="HR">HR</option>
-                  <option value="IT">IT</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Safety">Safety</option>
-                  <option value="Events">Events</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.name}>
+                      {safeTranslateAnn(cat.name, cat.name)}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="grid gap-2">
@@ -997,7 +1014,7 @@ export default function ManageAnnouncementsPage() {
                   htmlFor="edit-priority"
                   className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
                 >
-                  Priority
+                  {commonT("priority")}
                 </Label>
                 <select
                   id="edit-priority"
@@ -1005,10 +1022,10 @@ export default function ManageAnnouncementsPage() {
                   onChange={(e) => setEditPriority(e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                 >
-                  <option value="Low">Low</option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
-                  <option value="Urgent">Urgent</option>
+                  <option value="Low">{commonT("low")}</option>
+                  <option value="Medium">{commonT("medium")}</option>
+                  <option value="High">{commonT("high")}</option>
+                  <option value="Urgent">{commonT("urgent")}</option>
                 </select>
               </div>
             </div>
@@ -1017,12 +1034,12 @@ export default function ManageAnnouncementsPage() {
                 htmlFor="edit-content"
                 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold"
               >
-                Content
+                {announcementsT("fullContent")}
               </Label>
               <RichTextEditor
                 content={editContent}
                 onChange={setEditContent}
-                placeholder="Update the announcement details..."
+                placeholder={t("placeholderUpdate")}
               />
             </div>
 
@@ -1030,9 +1047,9 @@ export default function ManageAnnouncementsPage() {
 
             <div className="flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 p-4">
               <div className="space-y-0.5">
-                <Label className="text-base font-medium">Pin to Dashboard</Label>
+                <Label className="text-base font-medium">{announcementsT("pinToDashboard")}</Label>
                 <p className="text-sm text-muted-foreground">
-                  Keep this announcement pinned to the top.
+                  {announcementsT("pinDesc")}
                 </p>
               </div>
               <Switch checked={editPinned} onCheckedChange={setEditPinned} />
@@ -1046,10 +1063,10 @@ export default function ManageAnnouncementsPage() {
                 setEditAnn(null);
               }}
             >
-              Cancel
+              {commonT("cancel")}
             </Button>
             <Button onClick={handleEditSave} disabled={editSaving}>
-              {editSaving ? "Saving..." : "Save Changes"}
+              {editSaving ? commonT("saving") : commonT("saveChanges")}
             </Button>
           </div>
         </DialogContent>
@@ -1079,35 +1096,33 @@ export default function ManageAnnouncementsPage() {
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${cBg}`}
                       >
                         <DynamicCategoryIcon icon={cIcon} className="size-3" />
-                        {previewAnn.category}
+                        {safeTranslateAnn(previewAnn.category, previewAnn.category)}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider ${pConfig.badge}`}
                       >
-                        <span
-                          className={`relative flex size-2 items-center justify-center ${pConfig.wrapper}`}
-                        >
+                        <span className={`relative flex size-1.5 ${pConfig.wrapper}`}>
                           <span
-                            className={`absolute inline-flex h-full w-full rounded-full ${pConfig.outerDot}`}
-                          ></span>
+                            className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-40 ${pConfig.outerDot}`}
+                          />
                           <span
                             className={`relative inline-flex size-1.5 rounded-full ${pConfig.innerDot}`}
-                          ></span>
+                          />
                         </span>
-                        {previewAnn.priority}
+                        {safeTranslateCommon(previewAnn.priority, previewAnn.priority)}
                       </span>
                       {previewAnn.pinned && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                          ðŸ“Œ Pinned
+                          📌 {announcementsT("pinned")}
                         </span>
                       )}
-                      <span className="ml-auto inline-flex items-center gap-2 text-[11px] text-muted-foreground font-bold uppercase tracking-widest">
+                      <span className="ms-auto inline-flex items-center gap-2 text-[11px] text-muted-foreground font-bold uppercase tracking-widest">
                         <Clock className="size-3.5" />
-                        {readingTime} MIN READ
+                        {announcementsT("readingTime", { count: readingTime })}
                       </span>
                     </div>
 
-                    <DialogHeader className="text-left space-y-4">
+                    <DialogHeader className="text-start space-y-4">
                       <DialogTitle className="text-3xl font-black leading-[1.1] tracking-tight decoration-primary/30 decoration-4 underline-offset-8">
                         {previewAnn.title}
                       </DialogTitle>
@@ -1117,31 +1132,31 @@ export default function ManageAnnouncementsPage() {
                             <UserIcon className="size-5 text-primary/70" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold leading-none">
-                              {previewAnn.author?.name || "Unknown"}
+                            <span className="text-[13px] font-semibold leading-none text-foreground">
+                              {previewAnn.author?.name || commonT("unknown")}
                             </span>
-                            <span className="text-[11px] text-muted-foreground font-medium mt-1">
-                              {previewAnn.author?.role || "Employee"}
+                            <span className="mt-0.5">
+                              <RoleBadge role={previewAnn.author?.role || "Employee"} size="sm" />
                             </span>
                           </div>
                         </div>
                         <div className="h-8 w-px bg-border/50 hidden sm:block" />
-                        <div className="flex items-center gap-6 ml-auto sm:ml-0">
+                        <div className="flex items-center gap-6 ms-auto sm:ms-0">
                           <div className="flex flex-col">
                             <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none mb-1">
-                              Date Created
+                              {announcementsT("dateCreated")}
                             </span>
                             <span className="text-xs font-semibold tabular-nums">
-                              {getDate(previewAnn)}
+                              {previewAnn && getDate(previewAnn, format)}
                             </span>
                           </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none mb-1">
-                              Stats
+                              {announcementsT("stats")}
                             </span>
                             <span className="text-xs font-semibold tabular-nums flex items-center gap-1">
                               <Eye className="size-3 text-primary/60" />
-                              {previewAnn.views || 0} views
+                              {announcementsT("viewsCount", { count: previewAnn.views || 0 })}
                             </span>
                           </div>
                         </div>
@@ -1165,7 +1180,7 @@ export default function ManageAnnouncementsPage() {
 
                           <div className="p-12 text-center border-2 border-dashed border-border/50 rounded-3xl bg-muted/10 opacity-60">
                             <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
-                              Comments Section (Client View Only)
+                              {announcementsT("commentsPlaceholder")}
                             </p>
                           </div>
                         </div>
@@ -1174,11 +1189,11 @@ export default function ManageAnnouncementsPage() {
                         <aside className="space-y-8">
                           <div className="p-4 rounded-2xl border border-primary/20 bg-primary/5 text-center">
                             <p className="text-[10px] font-black uppercase tracking-widest text-primary/60 mb-2">
-                              Editor Preview
+                              {announcementsT("editorPreview")}
                             </p>
-                            <p className="text-xs font-semibold">
-                              Attachments are managed in the edit dialog.
-                            </p>
+                            <span className="text-xs font-semibold">
+                              {announcementsT("minReadCount", { count: readingTime })}
+                            </span>
                           </div>
                         </aside>
                       </div>

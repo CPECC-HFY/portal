@@ -46,7 +46,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type AuditLogWithUser } from "@/types/database";
-import { useAuditLogsList } from "@/hooks/use-supabase";
+import { useAuditLogsList, useNotificationsList, useUser } from "@/hooks/use-supabase";
+import { supabase } from "@/lib/supabase";
+import { cn, stripHtml } from "@/lib/utils";
+import Link from "next/link";
+import { useTranslations, useFormatter } from "next-intl";
 
 const actionConfig: Record<string, { bg: string; icon: React.ReactNode }> = {
   Create: {
@@ -112,8 +116,18 @@ export default function AuditLogPage() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [actionFilter, setActionFilter] = useState("All");
 
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
+  const format = useFormatter();
+
+  // Helper to translate safely with fallback to raw value
+  const safeTranslateAdm = (key: string, raw: string) => {
+    const k = key.toLowerCase();
+    return t.has(k) ? t(k) : raw;
+  };
+
   const filtered = useMemo(
-    () => (actionFilter === "All" ? data : data.filter((e) => e.action === actionFilter)),
+    () => (actionFilter === "All" ? data : data.filter((e: any) => e.action === actionFilter)),
     [data, actionFilter]
   );
 
@@ -121,19 +135,19 @@ export default function AuditLogPage() {
     () => [
       {
         accessorKey: "timestamp",
-        header: "Timestamp",
+        header: t("timestamp"),
         cell: ({ row }) => {
           const d = new Date(row.original.timestamp);
           return (
             <div className="text-sm">
               <p className="font-medium">
-                {d.toLocaleDateString("en-US", {
+                {format.dateTime(d, {
                   month: "short",
                   day: "numeric",
                 })}
               </p>
               <p className="text-xs text-muted-foreground">
-                {d.toLocaleTimeString("en-US", {
+                {format.dateTime(d, {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}
@@ -144,19 +158,19 @@ export default function AuditLogPage() {
       },
       {
         accessorKey: "user",
-        header: "User",
+        header: commonT("user"),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 text-primary">
               <UserIcon className="size-3.5 opacity-80" />
             </div>
-            <span className="text-sm font-medium">{row.original.user?.name || "System"}</span>
+            <span className="text-sm font-medium">{row.original.user?.name || t("system")}</span>
           </div>
         ),
       },
       {
         accessorKey: "action",
-        header: "Action",
+        header: t("action"),
         cell: ({ row }) => {
           const aCfg = actionConfig[row.original.action] || {
             bg: "bg-slate-500/10 text-slate-600 border border-slate-500/20",
@@ -164,17 +178,17 @@ export default function AuditLogPage() {
           };
           return (
             <span
-              className={`inline-flex w-[100px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${aCfg.bg}`}
+              className={`inline-flex w-[110px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${aCfg.bg}`}
             >
               {aCfg.icon}
-              <span className="truncate">{row.original.action}</span>
+              <span className="truncate">{safeTranslateAdm(row.original.action, row.original.action)}</span>
             </span>
           );
         },
       },
       {
         accessorKey: "resource",
-        header: "Resource",
+        header: t("resource"),
         cell: ({ row }) => {
           const resCfg = resourceConfig[row.original.resource] || {
             bg: "bg-slate-500/10 text-slate-600 border border-slate-500/20",
@@ -182,20 +196,20 @@ export default function AuditLogPage() {
           };
           return (
             <span
-              className={`inline-flex w-[100px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${resCfg.bg}`}
+              className={`inline-flex w-[110px] items-center justify-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-medium transition-colors ${resCfg.bg}`}
             >
               {resCfg.icon}
-              <span className="truncate">{row.original.resource}</span>
+              <span className="truncate">{safeTranslateAdm(row.original.resource, row.original.resource)}</span>
             </span>
           );
         },
       },
       {
         accessorKey: "details",
-        header: "Details",
+        header: t("details"),
         cell: ({ row }) => {
           const details = row.original.details;
-          if (!details) return <span className="text-muted-foreground italic">No details</span>;
+          if (!details) return <span className="text-muted-foreground italic">{t("noDetails")}</span>;
 
           // 1. Handle JSON (e.g., {"name":"Ahmed Kamal","role":"Employee"})
           try {
@@ -225,14 +239,14 @@ export default function AuditLogPage() {
           if (details.includes("Deleted user ID:")) {
             return (
               <span className="text-red-600/80 font-medium">
-                {details.replace("Deleted user ID:", "User deleted (ID:").concat(")")}
+                {details.replace("Deleted user ID:", t("userDeletedID")).concat(")")}
               </span>
             );
           }
 
           // 3. Already improved server logs (e.g., "Deleted user: Name")
           if (details.startsWith("Deleted user:")) {
-            return <span className="text-red-700 font-semibold">{details}</span>;
+            return <span className="text-red-700 font-semibold">{details.replace("Deleted user:", t("userDeleted"))}</span>;
           }
 
           return (
@@ -242,7 +256,7 @@ export default function AuditLogPage() {
       },
       {
         accessorKey: "ip_address",
-        header: "IP Address",
+        header: t("ipAddress"),
         cell: ({ row }) => {
           const ip = row.original.ip_address as string;
           if (!ip || ip === "N/A")
@@ -258,7 +272,7 @@ export default function AuditLogPage() {
             <div className="flex items-center gap-1.5">
               {isLocal ? (
                 <span className="rounded bg-blue-500/10 px-1.5 py-0.5 text-[10px] font-medium text-blue-600 border border-blue-500/20 lowercase">
-                  localhost
+                  {commonT("localhost")}
                 </span>
               ) : (
                 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono text-muted-foreground">
@@ -290,7 +304,7 @@ export default function AuditLogPage() {
 
   const statsData = [
     {
-      title: "Total Logs",
+      title: t("totalLogs"),
       value: data.length,
       icon: Activity,
       color: "text-blue-500",
@@ -299,8 +313,8 @@ export default function AuditLogPage() {
       gradientTo: "to-blue-500/5",
     },
     {
-      title: "Logins",
-      value: data.filter((e) => e.action === "Login").length,
+      title: commonT("logins"),
+      value: data.filter((e: any) => e.action === "Login").length,
       icon: LogIn,
       color: "text-emerald-500",
       bgColor: "bg-emerald-500/10",
@@ -308,8 +322,8 @@ export default function AuditLogPage() {
       gradientTo: "to-emerald-500/5",
     },
     {
-      title: "Creates",
-      value: data.filter((e) => e.action === "Create").length,
+      title: t("creates"),
+      value: data.filter((e: any) => e.action === "Create").length,
       icon: FilePlus,
       color: "text-purple-500",
       bgColor: "bg-purple-500/10",
@@ -317,8 +331,8 @@ export default function AuditLogPage() {
       gradientTo: "to-purple-500/5",
     },
     {
-      title: "Deletes",
-      value: data.filter((e) => e.action === "Delete").length,
+      title: t("deletesLog"),
+      value: data.filter((e: any) => e.action === "Delete").length,
       icon: Trash2,
       color: "text-red-500",
       bgColor: "bg-red-500/10",
@@ -330,9 +344,9 @@ export default function AuditLogPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Audit Log</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("auditLog")}</h1>
         <p className="text-muted-foreground">
-          Detailed logs of all system actions and user activity.
+          {t("auditLogDesc")}
         </p>
       </div>
 
@@ -364,12 +378,12 @@ export default function AuditLogPage() {
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative w-full sm:flex-1 sm:max-w-sm">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search logs..."
+            placeholder={t("searchLogs")}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-9"
+            className="ps-9"
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -381,7 +395,7 @@ export default function AuditLogPage() {
               onClick={() => setActionFilter(action)}
               className="text-xs flex-1 sm:flex-none"
             >
-              {action}
+              {action === "All" ? commonT("all") : t(action.toLowerCase())}
             </Button>
           ))}
         </div>
@@ -389,8 +403,8 @@ export default function AuditLogPage() {
 
       <Card>
         <CardHeader className="pb-4">
-          <CardTitle>System Activity Log</CardTitle>
-          <CardDescription>{table.getFilteredRowModel().rows.length} log entries</CardDescription>
+          <CardTitle>{t("systemActivityLog")}</CardTitle>
+          <CardDescription>{t("logEntries", { count: table.getFilteredRowModel().rows.length })}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border overflow-x-auto">
@@ -412,7 +426,7 @@ export default function AuditLogPage() {
                 {loading && !data.length ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center animate-pulse">
-                      Loading live audit logs...
+                      {t("loadingAuditLogs")}
                     </TableCell>
                   </TableRow>
                 ) : table.getRowModel().rows.length ? (
@@ -428,7 +442,7 @@ export default function AuditLogPage() {
                 ) : (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
-                      No log entries found.
+                      {t("noLogsFound")}
                     </TableCell>
                   </TableRow>
                 )}
@@ -438,7 +452,7 @@ export default function AuditLogPage() {
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between pt-4">
             <p className="text-sm text-muted-foreground">
-              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+              {commonT("page")} {table.getState().pagination.pageIndex + 1} {commonT("of")} {table.getPageCount()}
             </p>
             <div className="flex gap-2">
               <Button
@@ -448,8 +462,8 @@ export default function AuditLogPage() {
                 disabled={!table.getCanPreviousPage()}
                 className="flex-1 sm:flex-none"
               >
-                <ChevronLeft className="mr-1 size-4" />
-                Previous
+                <ChevronLeft className="me-1 size-4" />
+                {commonT("previous")}
               </Button>
               <Button
                 variant="outline"
@@ -458,8 +472,8 @@ export default function AuditLogPage() {
                 disabled={!table.getCanNextPage()}
                 className="flex-1 sm:flex-none"
               >
-                Next
-                <ChevronRight className="ml-1 size-4" />
+                {commonT("next")}
+                <ChevronRight className="ms-1 size-4" />
               </Button>
             </div>
           </div>

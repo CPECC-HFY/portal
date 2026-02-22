@@ -31,6 +31,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RoleBadge } from "@/components/ui/role-badge";
 import { supabase } from "@/lib/supabase";
@@ -39,6 +40,7 @@ import { cn, stripHtml } from "@/lib/utils";
 import { AnnouncementComments } from "@/components/announcements/announcement-comments";
 import { Paperclip, Download, ExternalLink } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useTranslations, useFormatter } from "next-intl";
 
 const categories = ["All", "General", "HR", "IT", "Finance", "Safety", "Events"];
 const priorities = ["All", "Low", "Medium", "High", "Urgent"];
@@ -106,22 +108,20 @@ const categoryConfig: Record<string, { bg: string; icon: React.ReactNode }> = {
   },
 };
 
-function getDate(ann: any): string {
+function getDate(ann: any, format: any): string {
   const raw = ann.published_at || ann.publishedAt || ann.created_at;
   if (!raw) return "";
   const d = new Date(raw);
-  return isNaN(d.getTime())
-    ? ""
-    : d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  if (isNaN(d.getTime())) return "";
+  return format.dateTime(d, { month: "short", day: "numeric", year: "numeric" });
 }
 
-function getDateLong(ann: any): string {
+function getDateLong(ann: any, format: any): string {
   const raw = ann.published_at || ann.publishedAt || ann.created_at;
   if (!raw) return "";
   const d = new Date(raw);
-  return isNaN(d.getTime())
-    ? ""
-    : d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  if (isNaN(d.getTime())) return "";
+  return format.dateTime(d, { month: "long", day: "numeric", year: "numeric" });
 }
 
 export default function AnnouncementsClient() {
@@ -131,6 +131,16 @@ export default function AnnouncementsClient() {
 
   const { data: announcements, loading } = useAnnouncementsList();
   const [selectedAnn, setSelectedAnn] = useState<any>(null);
+
+  const t = useTranslations("Announcements");
+  const commonT = useTranslations("Common");
+  const format = useFormatter();
+
+  // Helper to translate safely with fallback to raw value
+  const safeTranslate = (key: string, raw: string) => {
+    const k = key.toLowerCase();
+    return t.has(k) ? t(k) : raw;
+  };
 
   const handleOpenAnn = async (ann: any) => {
     setSelectedAnn(ann);
@@ -158,21 +168,21 @@ export default function AnnouncementsClient() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Announcements</h1>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
         <p className="text-muted-foreground">
-          Stay updated with official news and updates from across the organization.
+          {t("subHeader")}
         </p>
       </div>
 
       {/* Filters */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search announcements..."
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value || null)}
-            className="pl-9"
+            className="ps-9"
           />
         </div>
         <div className="flex gap-2">
@@ -185,7 +195,7 @@ export default function AnnouncementsClient() {
                 onClick={() => setCategory(cat === "All" ? null : cat)}
                 className="shrink-0"
               >
-                {cat}
+                {safeTranslate(cat, cat)}
               </Button>
             ))}
           </div>
@@ -202,7 +212,7 @@ export default function AnnouncementsClient() {
             onClick={() => setPriority(p === "All" ? null : p)}
             className="shrink-0 text-xs"
           >
-            {p}
+            {safeTranslate(p, p)}
           </Button>
         ))}
       </div>
@@ -212,8 +222,8 @@ export default function AnnouncementsClient() {
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <Search className="mb-4 size-12 text-muted-foreground/50" />
-            <h3 className="text-lg font-semibold">No announcements found</h3>
-            <p className="text-sm text-muted-foreground">Try adjusting your search or filters.</p>
+            <h3 className="text-lg font-semibold">{t("noAnnouncements")}</h3>
+            <p className="text-sm text-muted-foreground">{t("adjustFilters")}</p>
           </div>
         ) : (
           filtered.map((ann) => {
@@ -233,7 +243,7 @@ export default function AnnouncementsClient() {
                       <User className="size-4.5 opacity-80" />
                     </div>
                     {ann.pinned && (
-                      <div className="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-amber-100 text-[10px] dark:bg-amber-900/50 shadow-sm">
+                      <div className="absolute -end-1 -top-1 flex size-5 items-center justify-center rounded-full bg-amber-100 text-[10px] dark:bg-amber-900/50 shadow-sm">
                         📌
                       </div>
                     )}
@@ -249,7 +259,7 @@ export default function AnnouncementsClient() {
                         className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium transition-colors ${catCfg.bg}`}
                       >
                         <span>{catCfg.icon}</span>
-                        {ann.category}
+                        {safeTranslate(ann.category, ann.category)}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-all ${config.badge}`}
@@ -264,7 +274,7 @@ export default function AnnouncementsClient() {
                             className={`relative inline-flex size-1.5 rounded-full ${config.innerDot}`}
                           ></span>
                         </span>
-                        {ann.priority}
+                        {safeTranslate(ann.priority, ann.priority)}
                       </span>
                     </div>
 
@@ -278,19 +288,19 @@ export default function AnnouncementsClient() {
                     {/* Meta row */}
                     <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1.5">
-                        by{" "}
+                        {t("by")}{" "}
                         <span className="font-medium text-foreground/80">
-                          {ann.author?.name || "Unknown"}
+                          {ann.author?.name || commonT("unknown")}
                         </span>
                         <RoleBadge role={ann.author?.role || "Employee"} size="sm" />
                       </span>
                       <span className="flex items-center gap-1.5 tabular-nums">
                         <Eye className="size-3.5" />
-                        {ann.views} views
+                        {t("viewsCount", { count: ann.views })}
                       </span>
                       <span className="flex items-center gap-1.5 tabular-nums">
                         <Clock className="size-3.5" />
-                        {getDate(ann)}
+                        {getDate(ann, format)}
                       </span>
                     </div>
                   </div>
@@ -312,7 +322,7 @@ export default function AnnouncementsClient() {
                 1,
                 Math.ceil((selectedAnn.content || "").split(/\s+/).length / 200)
               );
-              const formattedDate = getDateLong(selectedAnn);
+              const formattedDate = getDateLong(selectedAnn, format);
               const viewCount = (selectedAnn.views || 0) + 1;
 
               return (
@@ -325,7 +335,7 @@ export default function AnnouncementsClient() {
                         className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${catCfg.bg} ring-1 ring-black/[0.04] dark:ring-white/[0.06]`}
                       >
                         {catCfg.icon}
-                        {selectedAnn.category}
+                        {safeTranslate(selectedAnn.category, selectedAnn.category)}
                       </span>
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${config.badge} ring-1 ring-black/[0.04] dark:ring-white/[0.06]`}
@@ -338,18 +348,18 @@ export default function AnnouncementsClient() {
                             className={`relative inline-flex size-1.5 rounded-full ${config.innerDot}`}
                           />
                         </span>
-                        {selectedAnn.priority}
+                        {safeTranslate(selectedAnn.priority, selectedAnn.priority)}
                       </span>
                       {selectedAnn.pinned && (
                         <span className="inline-flex items-center gap-1 rounded-lg bg-amber-50 dark:bg-amber-500/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400 ring-1 ring-amber-200/60 dark:ring-amber-500/20">
                           <Pin className="size-3" />
-                          Pinned
+                          {commonT("pinned")}
                         </span>
                       )}
                     </div>
 
                     {/* Title */}
-                    <DialogHeader className="text-left space-y-0 mb-6">
+                    <DialogHeader className="text-start space-y-0 mb-6">
                       <DialogTitle className="text-xl sm:text-2xl lg:text-[28px] font-extrabold leading-[1.15] tracking-tight text-foreground">
                         {selectedAnn.title}
                       </DialogTitle>
@@ -364,7 +374,7 @@ export default function AnnouncementsClient() {
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[13px] font-semibold leading-none text-foreground">
-                            {selectedAnn.author?.name || "Unknown"}
+                            {selectedAnn.author?.name || commonT("unknown")}
                           </span>
                           <span className="mt-0.5">
                             <RoleBadge role={selectedAnn.author?.role || "Employee"} size="sm" />
@@ -386,43 +396,45 @@ export default function AnnouncementsClient() {
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Eye className="size-3.5 shrink-0" />
                         <span className="text-xs font-medium tabular-nums">
-                          {viewCount.toLocaleString()} {viewCount === 1 ? "view" : "views"}
+                          {t("viewsCount", { count: viewCount })}
                         </span>
                       </div>
 
                       {/* Reading Time */}
-                      <div className="flex items-center gap-2 text-muted-foreground sm:ml-auto">
+                      <div className="flex items-center gap-2 text-muted-foreground sm:ms-auto">
                         <Clock className="size-3.5 shrink-0" />
-                        <span className="text-xs font-medium">{readingTime} min read</span>
+                        <span className="text-xs font-medium">{t("minReadCount", { count: readingTime })}</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Divider */}
-                  <div className="mx-6 sm:mx-10">
-                    <Separator className="bg-border/30" />
-                  </div>
+                  {/* Attachments */}
+                  {selectedAnn.attachments?.length > 0 && (
+                    <div className="px-6 sm:px-10 mb-6">
+                      <AttachmentsList attachments={selectedAnn.attachments} t={t} />
+                    </div>
+                  )}
 
                   {/* Scrollable Body */}
-                  <ScrollArea className="max-h-[55vh]">
+                  <ScrollArea className="max-h-[60vh] border-t border-border/30">
                     <div className="px-6 sm:px-10 py-8">
-                      <div className="grid gap-10 lg:grid-cols-[1fr_200px]">
+                      <div className="grid gap-10 lg:grid-cols-[1fr_auto]">
                         {/* Main Content Column */}
                         <div className="space-y-8 min-w-0">
                           {/* Article Content */}
                           <article
                             className="prose prose-sm sm:prose-base dark:prose-invert max-w-none
-                                prose-p:leading-[1.8] prose-p:text-muted-foreground
-                                prose-headings:font-bold prose-headings:text-foreground prose-headings:tracking-tight
-                                prose-h2:text-lg prose-h2:mt-8 prose-h2:mb-3
-                                prose-h3:text-base prose-h3:mt-6 prose-h3:mb-2
-                                prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline
-                                prose-strong:text-foreground prose-strong:font-semibold
-                                prose-ul:my-4 prose-li:text-muted-foreground prose-li:leading-relaxed
-                                prose-blockquote:border-l-primary/30 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-xl prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic
-                                prose-code:bg-muted prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[13px] prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
-                                prose-img:rounded-xl prose-img:shadow-md prose-img:border prose-img:border-border/30
-                                prose-hr:border-border/30"
+                              prose-p:leading-[1.8] prose-p:text-muted-foreground
+                              prose-headings:font-bold prose-headings:text-foreground prose-headings:tracking-tight
+                              prose-h2:text-lg prose-h2:mt-8 prose-h2:mb-3
+                              prose-h3:text-base prose-h3:mt-6 prose-h3:mb-2
+                              prose-a:text-primary prose-a:font-medium prose-a:no-underline hover:prose-a:underline
+                              prose-strong:text-foreground prose-strong:font-semibold
+                              prose-ul:my-4 prose-li:text-muted-foreground prose-li:leading-relaxed
+                              prose-blockquote:border-l-primary/30 prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-xl prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:not-italic
+                              prose-code:bg-muted prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[13px] prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
+                              prose-img:rounded-xl prose-img:shadow-md prose-img:border prose-img:border-border/30
+                              prose-hr:border-border/30"
                           >
                             <div
                               className="rich-content"
@@ -436,11 +448,6 @@ export default function AnnouncementsClient() {
                             <AnnouncementComments announcementId={selectedAnn.id} />
                           </div>
                         </div>
-
-                        {/* Sidebar */}
-                        <aside className="space-y-6 lg:border-l lg:border-border/30 lg:pl-8">
-                          <AttachmentsList announcementId={selectedAnn.id} />
-                        </aside>
                       </div>
                     </div>
                   </ScrollArea>
@@ -454,7 +461,7 @@ export default function AnnouncementsClient() {
                           size="sm"
                           className="h-8 rounded-lg text-xs font-medium px-4"
                         >
-                          Close
+                          {commonT("close")}
                         </Button>
                       </DialogClose>
                     </div>
@@ -462,19 +469,21 @@ export default function AnnouncementsClient() {
                 </>
               );
             })()}
+
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   );
 }
 
-function AttachmentsList({ announcementId }: { announcementId: string }) {
-  const { attachments, loading } = useAnnouncementAttachments(announcementId);
+function AttachmentsList({ attachments, t }: { attachments: any[]; t: any }) {
 
-  if (loading) return null;
+
+
   if (attachments.length === 0) return null;
 
-  const handleDownload = async (file: any) => {
+  const handleDownload = async (file: any, e: React.MouseEvent) => {
+    e.stopPropagation();
     const { data, error } = await supabase.storage.from("announcements").download(file.file_path);
 
     if (error) {
@@ -492,39 +501,73 @@ function AttachmentsList({ announcementId }: { announcementId: string }) {
     document.body.removeChild(a);
   };
 
+  const handleView = (file: any) => {
+    const { data } = supabase.storage.from("announcements").getPublicUrl(file.file_path);
+    if (data?.publicUrl) {
+      window.open(data.publicUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
         <Paperclip className="size-3.5" />
-        Attachments
+        {t("attachments")}
       </h4>
       <div className="grid gap-3">
         {attachments.map((file) => (
           <div
             key={file.id}
-            onClick={() => handleDownload(file)}
-            className="group flex flex-col p-4 rounded-2xl border border-border/50 bg-muted/5 hover:bg-primary/[0.03] hover:border-primary/20 transition-all cursor-pointer shadow-sm hover:shadow-md"
+            onClick={() => handleView(file)}
+            className="group flex items-center gap-3 p-3 rounded-2xl border border-border/50 bg-muted/5 hover:bg-primary/[0.03] hover:border-primary/20 transition-all cursor-pointer shadow-sm hover:shadow-md"
           >
-            <div className="flex items-start justify-between mb-3">
-              <div className="size-10 shrink-0 flex items-center justify-center rounded-xl bg-background border shadow-sm group-hover:bg-primary/10 transition-colors">
-                <FileText className="size-5 text-primary/60 group-hover:text-primary transition-colors" />
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="size-8 rounded-full bg-background/50 border opacity-0 group-hover:opacity-100 transition-all"
-              >
-                <Download className="size-4" />
-              </Button>
+            <div className="size-10 shrink-0 flex items-center justify-center rounded-xl bg-background border shadow-sm group-hover:bg-primary/10 transition-colors">
+              <FileText className="size-5 text-primary/60 group-hover:text-primary transition-colors" />
             </div>
-            <div className="flex flex-col min-w-0">
+
+            <div className="flex flex-col min-w-0 flex-1">
               <span className="text-sm font-bold truncate group-hover:text-primary transition-colors">
                 {file.file_name}
               </span>
-              <span className="text-[10px] text-muted-foreground font-semibold mt-1">
+              <span className="text-[10px] text-muted-foreground font-semibold mt-0.5">
                 {(file.file_size / 1024).toFixed(1)} KB •{" "}
-                {file.file_type.split("/").pop()?.toUpperCase()}
+                {file.file_type.split("/").pop()?.toUpperCase() || "FILE"}
               </span>
+            </div>
+
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 rounded-full bg-background/50 hover:bg-background border focus:opacity-100"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleView(file);
+                      }}
+                    >
+                      <ExternalLink className="size-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">{t("viewFile")}</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-8 rounded-full bg-background/50 hover:bg-background border focus:opacity-100"
+                      onClick={(e) => handleDownload(file, e)}
+                    >
+                      <Download className="size-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" className="text-xs">{t("downloadFile")}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
         ))}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Home,
   Megaphone,
@@ -48,6 +49,8 @@ export function AppSidebar() {
   const [isMounted, setIsMounted] = useState(false);
   const { user } = useUser();
   const { data: notifications, unreadCount } = useNotificationsList(user?.id);
+  const locale = useLocale();
+  const isRTL = locale === "ar";
 
   useEffect(() => {
     setIsMounted(true);
@@ -55,6 +58,22 @@ export function AppSidebar() {
 
   const { profile } = useUserProfile(user?.id);
   const isAdmin = profile?.role === "Admin" || profile?.role === "Super Admin";
+  const t = useTranslations("Navigation");
+
+  const translatedMainNav = [
+    { title: t("dashboard"), href: "/dashboard", icon: Home },
+    { title: t("announcements"), href: "/announcements", icon: Megaphone },
+    { title: t("notifications"), href: "/notifications", icon: Bell, badge: true },
+    { title: t("settings"), href: "/settings", icon: Settings },
+  ];
+
+  const translatedAdminNav = [
+    { title: t("analytics"), href: "/admin/analytics", icon: BarChart3 },
+    { title: t("manageUsers"), href: "/admin/users", icon: Users },
+    { title: t("manageGroups"), href: "/admin/groups", icon: Sparkles },
+    { title: t("manageAnnouncements"), href: "/admin/announcements", icon: FileText },
+    { title: t("auditLog"), href: "/admin/audit-log", icon: Shield },
+  ];
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -68,70 +87,108 @@ export function AppSidebar() {
 
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-svh flex-col border-r bg-sidebar-background transition-all duration-300 ease-in-out shadow-xl lg:shadow-none",
-          isOpen ? "w-64 translate-x-0" : "w-[68px] -translate-x-full lg:translate-x-0"
+          "fixed start-0 top-0 z-50 flex h-svh flex-col border-e bg-sidebar-background transition-all duration-300 ease-in-out shadow-xl lg:shadow-none",
+          isOpen
+            ? "w-64 translate-x-0"
+            : cn("w-[68px] lg:translate-x-0", isRTL ? "translate-x-full" : "-translate-x-full")
         )}
       >
-        {/* Logo */}
+        {/* Logo container */}
         <div
           className={cn(
-            "flex h-16 items-center border-b px-4",
+            "flex h-16 items-center border-b px-2",
             isOpen ? "justify-between" : "justify-center"
           )}
         >
-          <Link href="/dashboard" className="flex items-center gap-2.5">
-            <div
-              className={cn(
-                "flex items-center justify-center transition-all duration-300 overflow-hidden",
-                isOpen ? "w-32 h-10" : "size-8"
-              )}
-            >
-              {isMounted ? (
-                <Image
-                  src="/icons/raseplogof.png"
-                  alt="Logo"
-                  width={120}
-                  height={40}
-                  className="h-full w-full object-contain"
-                  priority
-                />
-              ) : (
-                <div className="h-4 w-12 animate-pulse rounded bg-muted/20" />
-              )}
+          {isOpen ? (
+            <div className="flex flex-1 items-center justify-center">
+              <Link href="/dashboard" className="flex items-center justify-center">
+                <div
+                  className={cn(
+                    "flex items-center justify-center transition-all duration-300 overflow-hidden",
+                    "w-32 h-10"
+                  )}
+                >
+                  {isMounted ? (
+                    <Image
+                      src="/icons/raseplogof.png"
+                      alt="Logo"
+                      width={120}
+                      height={40}
+                      className="h-full w-full object-contain"
+                      priority
+                    />
+                  ) : (
+                    <div className="h-4 w-12 animate-pulse rounded bg-muted/20" />
+                  )}
+                </div>
+              </Link>
             </div>
-            {isOpen && (
-              <span className="text-lg font-bold tracking-tight text-foreground">Portal</span>
-            )}
-          </Link>
+          ) : (
+            <Link href="/dashboard" className="flex items-center justify-center">
+              <div
+                className={cn(
+                  "flex items-center justify-center transition-all duration-300 overflow-hidden",
+                  "size-8"
+                )}
+              >
+                {isMounted ? (
+                  <Image
+                    src="/icons/raseplogof.png"
+                    alt="Logo"
+                    width={120}
+                    height={40}
+                    className="h-full w-full object-cover"
+                    priority
+                  />
+                ) : (
+                  <div className="h-4 w-12 animate-pulse rounded bg-muted/20" />
+                )}
+              </div>
+            </Link>
+          )}
+
+          {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
-            className="size-8 shrink-0 lg:hidden" // Hide on large screens
+            className={cn("size-8 shrink-0 lg:hidden", !isOpen && "absolute start-4")}
             onClick={toggle}
           >
             <Menu className="size-5" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 shrink-0 hidden lg:flex" // Show on large screens
-            onClick={toggle}
-          >
-            <ChevronLeft
-              className={cn("size-4 transition-transform duration-300", !isOpen && "rotate-180")}
-            />
-          </Button>
-        </div>
 
-        {/* Navigation */}
-        <ScrollArea className="flex-1 px-3 py-4">
-          <nav className="flex flex-col gap-1">
+          {/* Desktop Chevron Toggle */}
+          {isOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 shrink-0 hidden lg:flex end-2 absolute"
+              onClick={toggle}
+            >
+              <ChevronLeft className={cn("size-4 transition-transform duration-300", isRTL && "rotate-180")} />
+            </Button>
+          )}
+
+          {!isOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 shrink-0 hidden lg:flex absolute -end-4 top-4 z-50 bg-background border shadow-sm rounded-full"
+              onClick={toggle}
+            >
+              <ChevronLeft className={cn("size-4 transition-transform duration-300", isRTL ? "" : "rotate-180")} />
+            </Button>
+          )}
+        </div>
+        <ScrollArea className="h-[calc(100vh-64px)] pb-10">
+          <nav className="flex flex-col gap-1 p-3">
             {isOpen && (
               <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Main
+                {t("main")}
               </p>
             )}
-            {mainNav.map((item) => {
+            {translatedMainNav.map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
               const link = (
                 <Link
@@ -146,7 +203,7 @@ export function AppSidebar() {
                   )}
                 >
                   {isActive && (
-                    <div className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
+                    <div className="absolute start-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-e-full bg-sidebar-primary" />
                   )}
                   <item.icon
                     className={cn("size-[18px] shrink-0", isActive && "text-sidebar-primary")}
@@ -156,7 +213,7 @@ export function AppSidebar() {
                     <span
                       className={cn(
                         "flex items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-destructive-foreground",
-                        isOpen ? "ml-auto size-5" : "absolute -right-1 -top-1 size-4"
+                        isOpen ? "ms-auto size-5" : "absolute -end-1 -top-1 size-4"
                       )}
                     >
                       {unreadCount > 9 ? "9+" : unreadCount}
@@ -169,7 +226,7 @@ export function AppSidebar() {
               ) : (
                 <Tooltip key={item.href}>
                   <TooltipTrigger asChild>{link}</TooltipTrigger>
-                  <TooltipContent side="right">
+                  <TooltipContent side={isRTL ? "left" : "right"}>
                     {item.title}
                     {item.badge && unreadCount > 0 && ` (${unreadCount})`}
                   </TooltipContent>
@@ -183,10 +240,10 @@ export function AppSidebar() {
               <>
                 {isOpen && (
                   <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Administration
+                    {t("administration")}
                   </p>
                 )}
-                {adminNav.map((item) => {
+                {translatedAdminNav.map((item) => {
                   const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                   const link = (
                     <Link
@@ -201,7 +258,7 @@ export function AppSidebar() {
                       )}
                     >
                       {isActive && (
-                        <div className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-sidebar-primary" />
+                        <div className="absolute start-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-e-full bg-sidebar-primary" />
                       )}
                       <item.icon
                         className={cn("size-[18px] shrink-0", isActive && "text-sidebar-primary")}
@@ -214,7 +271,7 @@ export function AppSidebar() {
                   ) : (
                     <Tooltip key={item.href}>
                       <TooltipTrigger asChild>{link}</TooltipTrigger>
-                      <TooltipContent side="right">{item.title}</TooltipContent>
+                      <TooltipContent side={isRTL ? "left" : "right"}>{item.title}</TooltipContent>
                     </Tooltip>
                   );
                 })}
@@ -223,7 +280,6 @@ export function AppSidebar() {
           </nav>
         </ScrollArea>
 
-        {/* Footer removed to centralize profile in header */}
       </aside>
     </TooltipProvider>
   );

@@ -1,8 +1,10 @@
 "use client";
 
 import { WifiOff, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function OfflinePage() {
+  const t = useTranslations("Common");
   return (
     <div className="flex min-h-svh items-center justify-center bg-background p-6">
       <div className="text-center space-y-6 max-w-sm">
@@ -13,10 +15,9 @@ export default function OfflinePage() {
 
         {/* Text */}
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">You&apos;re Offline</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("offlineTitle")}</h1>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            It looks like you&apos;ve lost your internet connection. Please check your network and
-            try again.
+            {t("offlineDesc")}
           </p>
         </div>
 
@@ -26,7 +27,7 @@ export default function OfflinePage() {
           className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/30 active:scale-95"
         >
           <RefreshCw className="size-4" />
-          Try Again
+          {t("tryAgain")}
         </button>
       </div>
     </div>

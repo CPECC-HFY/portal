@@ -42,7 +42,7 @@ export function ConfirmDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px] overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="absolute top-0 start-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
         <DialogHeader>
           <div className="flex items-center gap-3">
@@ -73,7 +73,7 @@ export function ConfirmDialog({
             disabled={loading}
             className="rounded-xl shadow-lg shadow-primary/5 min-w-[100px]"
           >
-            {loading ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
+            {loading ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
             {confirmText}
           </Button>
         </DialogFooter>

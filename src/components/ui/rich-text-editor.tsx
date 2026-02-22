@@ -180,8 +180,10 @@ const MentionList = forwardRef<MentionListHandle, MentionListProps>((props, ref)
               ? "bg-primary text-primary-foreground"
               : "text-foreground hover:bg-accent"
           )}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => selectItem(index)}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            selectItem(index);
+          }}
           onMouseEnter={() => setSelectedIndex(index)}
         >
           <span
@@ -314,8 +316,12 @@ export function RichTextEditor({
     content,
     onUpdate: ({ editor: e }) => onChange(e.getHTML()),
     immediatelyRender: false,
+    parseOptions: {
+      preserveWhitespace: "full",
+    },
     editorProps: {
       attributes: {
+        dir: "auto",
         class: cn(
           "prose prose-sm dark:prose-invert max-w-none min-h-[160px] focus:outline-none px-5 py-4",
           "prose-headings:font-bold prose-headings:tracking-tight",

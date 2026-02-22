@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { IconPicker } from "@/components/ui/icon-picker";
 import { useAnnouncementCategories } from "@/hooks/use-announcement-categories";
+import { useTranslations } from "next-intl";
 
 interface CategoryManagerProps {
   open: boolean;
@@ -24,6 +25,8 @@ interface CategoryManagerProps {
 }
 
 export function CategoryManager({ open, onOpenChange, onCategoryCreated }: CategoryManagerProps) {
+  const t = useTranslations("Admin");
+  const commonT = useTranslations("Common");
   const { addCategory } = useAnnouncementCategories();
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("Megaphone");
@@ -32,7 +35,7 @@ export function CategoryManager({ open, onOpenChange, onCategoryCreated }: Categ
 
   const handleCreate = async () => {
     if (!name.trim()) {
-      setError("Category name is required");
+      setError(t("categoryNameRequired"));
       return;
     }
 
@@ -59,26 +62,26 @@ export function CategoryManager({ open, onOpenChange, onCategoryCreated }: Categ
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>New Category</DialogTitle>
+          <DialogTitle>{t("newCategory")}</DialogTitle>
           <DialogDescription>
-            Add a new category for announcements with a custom icon.
+            {t("newCategoryDesc")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="cat-name">Category Name</Label>
+            <Label htmlFor="cat-name">{t("categoryName")}</Label>
             <Input
               id="cat-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Marketing"
+              placeholder={t("categoryNamePlaceholder")}
               autoFocus
             />
           </div>
 
           <div className="grid gap-2">
-            <Label>Category Icon</Label>
+            <Label>{t("categoryIcon")}</Label>
             <IconPicker value={icon} onChange={setIcon} />
           </div>
 
@@ -87,11 +90,11 @@ export function CategoryManager({ open, onOpenChange, onCategoryCreated }: Categ
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {commonT("cancel")}
           </Button>
           <Button onClick={handleCreate} disabled={loading}>
-            {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
-            Create Category
+            {loading && <Loader2 className="me-2 size-4 animate-spin" />}
+            {t("createCategory")}
           </Button>
         </DialogFooter>
       </DialogContent>
