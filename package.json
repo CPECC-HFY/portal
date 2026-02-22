@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
-    "pages:build": "opennextjs-cloudflare build",
+    "build": "next build",
+    "pages:build": "npx @opennextjs/cloudflare build",
+    "preview": "npx wrangler pages dev",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
