@@ -32,8 +32,8 @@ export default function LoginPage() {
     if (error) {
       setError(error.message);
     } else if (data.session) {
-      // Log audit event
-      await logAudit("Login", "System", `User logged in: ${email}`);
+      // Log audit event (fire-and-forget, don't block login)
+      logAudit("Login", "System", `User logged in: ${email}`).catch(() => {});
       // Once logged in, redirect to the dashboard
       router.push("/dashboard");
     }
