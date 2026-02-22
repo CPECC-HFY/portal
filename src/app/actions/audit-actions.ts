@@ -1,6 +1,6 @@
-﻿export const runtime = "edge";
+﻿"use server";
 /* eslint-disable @typescript-eslint/no-explicit-any */
-("use server");
+export const runtime = "edge";
 
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { headers } from "next/headers";

@@ -1,5 +1,5 @@
-﻿export const runtime = "edge";
-("use client");
+"use client";
+export const runtime = "edge";
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 
 import {
