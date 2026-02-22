@@ -1,5 +1,4 @@
 ﻿"use server";
-export const runtime = "edge";
 
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { revalidatePath } from "next/cache";

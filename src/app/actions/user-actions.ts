@@ -1,6 +1,5 @@
 ﻿"use server";
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
-export const runtime = "edge";
 
 import { createClient } from "@supabase/supabase-js";
 import { type Database } from "@/types/supabase";
