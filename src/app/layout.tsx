@@ -7,6 +7,8 @@ import { getMessages, getLocale } from "next-intl/server";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
+export const runtime = "edge";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
